@@ -51,6 +51,39 @@
 }
 
 /****************************
+  * Button Components
+  ****************************/
+@layer components {
+  .btn {
+    @apply rounded-lg text-base leading-[150%] font-bold h-14 py-3 cursor-pointer flex justify-center items-center gap-2;
+  }
+
+  .btn-primary {
+    @apply bg-brand-primary text-white border border-brand-primary;
+  }
+
+  .btn-secondary {
+    @apply bg-brand-secondary text-white border border-brand-primary;
+  }
+
+  .btn-neutral {
+    @apply bg-white text-gray-400 border border-gray-200;
+  }
+
+  .btn-md {
+    @apply w-1/2;
+  }
+
+  .btn-lg {
+    @apply w-full;
+  }
+
+  .btn-disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+}
+
+/****************************
   * Typography
   ****************************/
 @layer utilities {
