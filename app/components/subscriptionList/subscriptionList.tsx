@@ -6,7 +6,7 @@ import Badge from "../badge/badge";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleRight } from "@fortawesome/free-solid-svg-icons/faAngleRight";
 
-type SubcriptionProps = {
+type SubscriptionProps = {
   href: string;
   imageSrc: string;
   imageAlt: string;
@@ -19,7 +19,7 @@ type SubcriptionProps = {
   badgeVariant: "primary" | "danger";
 };
 
-export default function SubcriptionList({
+export default function SubscriptionList({
   href,
   imageSrc = "/images/default.svg",
   imageAlt = "이미지 설명",
@@ -28,7 +28,7 @@ export default function SubcriptionList({
   billingCycle,
   badgeLabel,
   badgeVariant,
-}: SubcriptionProps) {
+}: SubscriptionProps) {
   const isFreeTrial = price === 0;
   return (
     <div>
