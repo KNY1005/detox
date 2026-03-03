@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 
 interface Props {
+  href: string;
   userName: string;
   timeAgo: string;
   communityTitle: string;
@@ -12,6 +13,7 @@ interface Props {
   commentCount: number;
 }
 export default function CommunityList({
+  href,
   userName,
   timeAgo,
   communityTitle,
@@ -20,7 +22,7 @@ export default function CommunityList({
   commentCount,
 }: Props) {
   return (
-    <Link href="/" className="community-item">
+    <Link href={href} className="community-item">
       <div className="profile-info">
         {/* <div className="thumb">
         프로필사진
