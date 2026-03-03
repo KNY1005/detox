@@ -1,0 +1,71 @@
+"use client";
+
+import React from 'react';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { faChevronLeft } from '@fortawesome/free-solid-svg-icons/faChevronLeft';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+type HeaderVariant = "default" | "back" | "text";
+
+interface Props {
+  title?: string;
+  variant?: HeaderVariant;
+  leftText?: string;
+  rightContent?: React.ReactNode;
+  onBack?: () => void;
+}
+
+export default function Header({
+  title = "",
+  variant = "default",
+  leftText,
+  rightContent,
+  onBack,
+}: Props) {
+  const router = useRouter();
+
+  return (
+    <header className="sticky top-0 z-[999] w-full bg-white border-b border-gray-100">
+      <div className="max-w-screen-md mx-auto px-4">
+        <div className="flex items-center justify-between h-14">
+          
+          <div className="flex flex-1 justify-center items-center">
+            {variant === "back" && (
+              <button 
+                type="button" 
+                onClick={() => (onBack ? onBack() : router.back())} 
+                className="cursor-pointer flex items-center justify-center w-10 h-10 -ml-2 rounded-full"
+              >
+                <FontAwesomeIcon icon={faChevronLeft} className="w-7 h-7 text-black" />
+              </button>
+            )}
+            {variant === "default" && (
+              <div className="cursor-pointer">
+                <Image src="/images/logo.png" alt="logo" width={80} height={40} className="object-contain" />
+              </div>
+            )}
+            {variant === "text" && (
+              <span className="header-md text-black">
+                {leftText}
+              </span>
+            )}
+          </div>
+
+          <div className="flex flex-1 justify-center items-center">
+            <h1 className="title-lg text-black truncate ">
+              {title}
+            </h1>
+          </div>
+
+          <div className="flex flex-1 justify-center items-center">
+            <div className="header-lg">
+              {rightContent}
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </header>
+  );
+}
