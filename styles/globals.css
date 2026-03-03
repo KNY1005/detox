@@ -74,6 +74,10 @@
     @apply bg-white text-gray-400 border border-gray-200;
   }
 
+  .btn-danger {
+    @apply bg-state-danger text-white;
+  }
+
   .btn-md {
     @apply w-1/2;
   }
@@ -98,43 +102,43 @@
   }
 
   .header-md {
-    font-size: 1.5rem;
+    font-size: 1.5rem; /* 24px */
     font-weight: 700;
     line-height: 110%;
   }
 
   .title-lg {
-    font-size: 1.25rem;
+    font-size: 1.25rem; /* 20px */
     font-weight: 700;
     line-height: 110%;
   }
 
   .title-md {
-    font-size: 1.125rem;
+    font-size: 1.125rem; /* 18px */
     font-weight: 700;
     line-height: 110%;
   }
 
   .body-lg {
-    font-size: 1rem;
+    font-size: 1rem; /* 16px */
     font-weight: 500;
     line-height: 150%;
   }
 
   .body-md {
-    font-size: 0.875rem;
+    font-size: 0.875rem; /* 14px */
     font-weight: 500;
     line-height: 150%;
   }
 
   .label-lg {
-    font-size: 0.75rem;
+    font-size: 0.75rem; /* 12px */
     font-weight: 500;
     line-height: 110%;
   }
 
   .label-md {
-    font-size: 0.6875rem;
+    font-size: 0.6875rem; /* 11px */
     font-weight: 500;
     line-height: 110%;
   }
