@@ -4,7 +4,7 @@ import * as React from "react";
 import { Textarea as ShadcnTextarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
-interface TextAreaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+interface Props extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   maxLength?: number;
 }
 
@@ -14,7 +14,7 @@ export default function TextArea({
   value, 
   onChange, 
   ...props 
-}: TextAreaProps) {
+}: Props) {
   const currentLength = typeof value === "string" ? value.length : 0;
 
   return (
