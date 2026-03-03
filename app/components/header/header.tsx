@@ -33,13 +33,13 @@ export default function Header({
               <button 
                 type="button" 
                 onClick={() => (onBack ? onBack() : router.back())} 
-                className="cursor-pointer flex items-center justify-center w-10 h-10 -ml-2 rounded-full"
+                className="cursor-pointer flex items-center justify-center w-10 h-10 -ml-2"
               >
                 <FontAwesomeIcon icon={faChevronLeft} className="w-7 h-7 text-gray-400" />
               </button>
             )}
             {variant === "default" && (
-              <div className="cursor-pointer">
+              <div className="cursor-pointer" onClick={() => router.push("/")}>
                 <Image src="/images/logo.png" alt="logo" width={80} height={40} className="object-contain" />
               </div>
             )}
