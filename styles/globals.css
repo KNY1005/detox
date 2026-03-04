@@ -105,12 +105,16 @@
     @apply bg-white text-gray-400 border border-gray-200;
   }
 
+  .btn-white {
+    @apply bg-white text-gray-300 border border-gray-100;
+  }
+
   .btn-danger {
     @apply bg-state-danger text-white;
   }
 
   .btn-rounded {
-    @apply w-10 h-10 rounded-full p-0;
+    @apply w-12 h-12 rounded-full p-0 shadow-sm;
   }
 
   .btn-md {
