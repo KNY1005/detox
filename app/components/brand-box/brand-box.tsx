@@ -39,6 +39,7 @@ export default function BrandBox({
         sizeMap[size],
         className
       )}
+      onClick={onClick}
     >
       <Image
         src={subscriptableBrand[brandType].image}
