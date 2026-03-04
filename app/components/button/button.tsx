@@ -5,7 +5,7 @@ import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { faCircleNotch } from "@fortawesome/free-solid-svg-icons/faCircleNotch";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-type ButtonVariant = "primary" | "secondary" | "neutral";
+type ButtonVariant = "primary" | "secondary" | "neutral" | "danger";
 type ButtonSize = "md" | "lg";
 
 interface Props {

@@ -7,6 +7,8 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 config.autoAddCss = false; // 자동으로 CSS 추가하는 기능 끄기
 
 import "../styles/globals.css";
+import { AlertProvider } from "./components/alert";
+import { Toaster } from "./components/toast";
 
 const pretendard = localFont({
   src: "../public/fonts/PretendardVariable.woff2",
@@ -27,7 +29,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" className={`${pretendard.variable} antialiased`}>
-      <body className={pretendard.className}>{children}</body>
+      <body className={pretendard.className}>
+        <AlertProvider />
+        <Toaster />
+        {children}
+      </body>
     </html>
   );
 }
