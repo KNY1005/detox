@@ -135,6 +135,21 @@
 }
 
 /****************************
+  * Sns Login Button Components
+  ****************************/
+@layer components {
+  .kakao-login {
+    @apply bg-[#FFE400] text-gray-400;
+  }
+  .naver-login {
+    @apply bg-[#00CB4B] text-white;
+  }
+  .google-login {
+    @apply bg-white text-gray-400 border border-gray-100;
+  }
+}
+
+/****************************
   * Typography
   ****************************/
 @layer utilities {
