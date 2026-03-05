@@ -34,7 +34,6 @@ export default function MonthExpenseSelector({ onChangeDate, groupCount }: Props
           </h2>
         </div>
 
-        {/* 오른쪽 화살표 */}
         <button 
           onClick={() => changeMonth(1)}
           className="text-black transition-colors p-1"
@@ -43,7 +42,6 @@ export default function MonthExpenseSelector({ onChangeDate, groupCount }: Props
         </button>
       </div>
 
-      {/* 금액 표시 영역 (24px) */}
       <div className="mt-2 pl-1">
         <span className="text-2xl font-black text-brand-primary">
           {(groupCount ?? 0).toLocaleString()}원
