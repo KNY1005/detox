@@ -28,7 +28,7 @@ export default function AnalysisSummary({ hasData }: AnalysisSummaryProps) {
             <span className="font-bold text-gray-800">티빙</span>을 해지하면 최소 월 4,900원 아낄 수 있어요
           </>
         }
-        brandType="tving" 
+        brandType="netflix" 
       />
 
       <AnalysisCard 
@@ -38,7 +38,6 @@ export default function AnalysisSummary({ hasData }: AnalysisSummaryProps) {
             넷플릭스를 해지하면 연 <span className="text-brand-primary font-bold text-[16px]">167,000원</span> 아낄 수 있어요
           </>
         }
-        // brandLogo 대신 brandType을 사용합니다!
         brandType="netflix" 
       />
     </div>
