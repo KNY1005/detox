@@ -11,6 +11,7 @@ import EmptyAnalysis from "./_components/empty-analysis";
 import EmptySubscriptionOverlay from "./_components/empty-subscription-overlay";
 import { MOCK_SUBSCRIPTIONS, SubscriptionItem } from "./mock-subscriptions";
 import AnalysisSummary from "./_components/analysis-summary/analysis-summary";
+import { calculateMonthlyTotal } from "@/app/utils/subscriptions/calculate";
 
 interface StatisticsPageProps {
   userName?: string;
@@ -22,23 +23,16 @@ export default function StatisticsPage({
   subscriptions
 }: StatisticsPageProps) {
   const [selectedDate, setSelectedDate] = useState(new Date());
-  
   const [hasAiData] = useState(true);
 
   const data = subscriptions || MOCK_SUBSCRIPTIONS;
   const isAllEmpty = data.length === 0;
 
-  const monthlyTotalAmount = useMemo(() => {
-    const currentMonth = selectedDate.getMonth() + 1;
-    return data.reduce((acc, sub) => {
-      if (sub.paymentType !== "paid") return acc;
-      if (sub.type === "monthly") return acc + sub.price;
-      if (sub.type === "yearly" && sub.billingDate.month === currentMonth) {
-        return acc + sub.price;
-      }
-      return acc;
-    }, 0);
-  }, [selectedDate, data]);
+  // 유틸 함수 호출
+  const monthlyTotalAmount = useMemo(
+    () => calculateMonthlyTotal(data, selectedDate), 
+    [selectedDate, data]
+  );
 
   const isMonthlyEmpty = !isAllEmpty && monthlyTotalAmount === 0;
   const average30s = 25000;
