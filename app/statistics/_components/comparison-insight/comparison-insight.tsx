@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface Props {
@@ -17,9 +16,7 @@ export default function ComparisonInsight({
   isLoading = false
 }: Props) {
 
-  const [showSkeleton] = useState(false);
-
-  if (isLoading && showSkeleton) {
+  if (isLoading) {
     return (
       <div className="flex flex-col items-start px-6 py-6 w-full gap-2">
         <Skeleton className="h-7 w-40 rounded-md bg-brand-primary/20" />

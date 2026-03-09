@@ -27,7 +27,9 @@ export default function MonthExpenseSelector({
   return (
     <div className="flex flex-col items-start justify-center w-full pt-5 bg-white px-5">
       <div className="flex items-center">
-        <button 
+        <button
+          type="button"
+          arta-label="이전 달 보기"
           onClick={() => changeMonth(-1)}
           className="text-black hover:opacity-50 transition-colors p-1"
         >
@@ -40,7 +42,9 @@ export default function MonthExpenseSelector({
           </h2>
         </div>
 
-        <button 
+        <button
+          type="button"
+          arta-label="다음 달 보기"
           onClick={() => changeMonth(1)}
           className="text-black hover:opacity-50 transition-colors p-1"
         >

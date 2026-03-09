@@ -17,6 +17,7 @@ export default function QuickQuestions({ onSelect }: QuickQuestionsProps) {
     <div className="flex flex-col items-end gap-2 px-6 mb-6">
       {questions.map((q, idx) => (
         <button
+          type="button"
           key={idx}
           onClick={() => onSelect(q)}
           className="bg-[#999999] text-white text-[14px] px-4 py-2.5 rounded-2xl rounded-tr-none shadow-sm active:opacity-80 transition-opacity text-right max-w-[90%]"

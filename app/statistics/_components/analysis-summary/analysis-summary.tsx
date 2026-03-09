@@ -25,7 +25,7 @@ export default function AnalysisSummary({ hasData }: AnalysisSummaryProps) {
         description={
           <>
             이 서비스 모두 <span className="underline">영화</span>와 <span className="underline">드라마</span>를 제공해요<br/>
-            <span className="font-bold text-gray-800">티빙</span>을 해지하면 최소 월 4,900원 아낄 수 있어요
+            <span className="font-bold text-gray-800">넷플릭스</span>를 해지하면 최소 월 4,900원 아낄 수 있어요
           </>
         }
         brandType="netflix" 

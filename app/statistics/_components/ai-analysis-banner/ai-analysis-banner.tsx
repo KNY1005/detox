@@ -4,6 +4,7 @@ import Robot from "@/public/images/emoji/Robot.png";
 import Image from "next/image";
 import Button from "@/app/components/button";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface Props {
   isAllEmpty?: boolean;
@@ -12,7 +13,8 @@ interface Props {
 export default function AIAnalysisBanner({ 
   isAllEmpty 
 }: Props) {
-  
+  const router = useRouter();
+
   return (
     <section className="flex flex-col items-center justify-center text-center px-6 py-6 bg-linear-to-t from-brand-primary/50 to-white md:min-h-100 md:py-8">
       <div className="space-y-3">
@@ -20,7 +22,7 @@ export default function AIAnalysisBanner({
           <span className="text-brand-primary">낭비되는 구독료</span>로<br />
           치킨을 먹을 수 있어요
         </h1>
-        <p className="text-1xl md:text-2xl text-gray-300 leading-relaxed">
+        <p className="text-[16px] md:text-2xl text-gray-300 leading-relaxed">
           숨겨진 구독료를 찾아<br />
           낭비를 줄여보세요
         </p>
@@ -39,11 +41,10 @@ export default function AIAnalysisBanner({
       {!isAllEmpty && (
         <div className="mt-8 w-full flex justify-center">
           <div className="w-full">
-            <Link href="/statistics/ai">
-              <Button variant="primary" size="lg">
-                AI 분석 시작하기
-              </Button>
-            </Link>
+            <Button variant="primary" size="lg"
+              onClick={() => router.push("/statistics/ai")}>
+              AI 분석 시작하기
+            </Button>
           </div>
         </div>
       )}

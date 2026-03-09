@@ -23,7 +23,7 @@ export default function StatisticsPage({
 }: StatisticsPageProps) {
   const [selectedDate, setSelectedDate] = useState(new Date());
   
-  const [hasAiData, setHasAiData] = useState(true);
+  const [hasAiData] = useState(true);
 
   const data = subscriptions || MOCK_SUBSCRIPTIONS;
   const isAllEmpty = data.length === 0;
