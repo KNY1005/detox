@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import DefaultUserImage from "@/public/images/default-user.png";
 
@@ -19,7 +20,7 @@ const avatarSize = {
 export default function Avatar({ size = "md", src, alt }: AvatarProps) {
   return (
     <div
-      className={`w-${avatarSize[size]} h-${avatarSize[size]} rounded-full bg-gray-100`}
+      className={`w-[${avatarSize[size]}px] h-[${avatarSize[size]}px] rounded-full bg-gray-100`}
     >
       <Image
         className="w-full h-full object-cover rounded-full"
