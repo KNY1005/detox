@@ -36,7 +36,7 @@ export default function BottomNav() {
           className={`flex flex-col items-center justify-around gap-1 ${isActive(href) ? "text-blue-400" : "text-gray-300"}`}
           aria-current={isActive(href) ? "page" : undefined}
         >
-          <FontAwesomeIcon size="xl" icon={icon} />
+          <FontAwesomeIcon size="lg" icon={icon} />
           <span className="text-xs">{label}</span>
         </Link>
       ))}

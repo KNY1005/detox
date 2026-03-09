@@ -12,6 +12,8 @@
   --state-secondary: #0081a7;
   --state-danger: #d94d4c;
 
+  --line-gray: #bdbdbd;
+
   --blue-400: #33999f;
   --blue-300: #54a9af;
   --blue-200: #8ac4c8;
@@ -49,6 +51,8 @@
   --color-state-primary: var(--state-primary);
   --color-state-secondary: var(--state-secondary);
   --color-state-danger: var(--state-danger);
+
+  --color-line-gray: var(--line-gray);
 
   --color-blue-400: var(--blue-400);
   --color-blue-300: var(--blue-300);
@@ -138,7 +142,8 @@
     @apply text-sm text-gray-300;
   }
   .item-subtext span:not(:last-child)::after {
-    @apply content-[''] inline-block w-px h-[9px] bg-gray-100 mx-2;
+    content: "";
+    @apply inline-block w-px h-[9px] bg-line-gray mx-2;
   }
 }
 
