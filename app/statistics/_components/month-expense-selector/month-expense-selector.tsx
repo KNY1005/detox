@@ -1,0 +1,61 @@
+"use client";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCaretLeft, faCaretRight } from "@fortawesome/free-solid-svg-icons";
+
+interface Props {
+  selectedDate: Date;
+  onChangeDate: (date: Date) => void;
+  groupCount: number;
+}
+
+export default function MonthExpenseSelector({
+  selectedDate,
+  onChangeDate,
+  groupCount,
+}: Props) {
+  const changeMonth = (offset: number) => {
+    const newDate = new Date(
+      selectedDate.getFullYear(),
+      selectedDate.getMonth() + offset,
+      1
+    );
+    onChangeDate(newDate);
+  };
+
+  return (
+    <div className="flex flex-col items-start justify-center w-full pt-5 bg-white px-5">
+      <div className="flex items-center">
+        <button
+          type="button"
+          arta-label="이전 달 보기"
+          onClick={() => changeMonth(-1)}
+          className="text-black hover:opacity-50 transition-colors p-1"
+        >
+          <FontAwesomeIcon icon={faCaretLeft} size="lg" />
+        </button>
+
+        <div className="min-w-40 text-center px-1">
+          <h2 className="body-lg font-bold text-black tracking-tight whitespace-nowrap">
+            {selectedDate.getMonth() + 1}월에 사용한 총 금액
+          </h2>
+        </div>
+
+        <button
+          type="button"
+          arta-label="다음 달 보기"
+          onClick={() => changeMonth(1)}
+          className="text-black hover:opacity-50 transition-colors p-1"
+        >
+          <FontAwesomeIcon icon={faCaretRight} size="lg" />
+        </button>
+      </div>
+
+      <div className="mt-2 pl-1">
+        <span className="text-2xl font-black text-brand-primary">
+          {(groupCount ?? 0).toLocaleString()}원
+        </span>
+      </div>
+    </div>
+  );
+}
