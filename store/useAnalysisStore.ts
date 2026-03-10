@@ -57,10 +57,11 @@ export const useAnalysisStore = create<AnalysisState>()(
 
       setResult: (newResult) => set({ result: newResult, isLoading: false }),
       setIsLoading: (status) => set({ isLoading: status }),
-      clearResult: () => set({ result: null }),
+      clearResult: () => set({ result: null, isLoading: false }),
     }),
     {
       name: "ai-analysis-storage",
+      partialize: (state) => ({ result: state.result }),
     }
   )
 );

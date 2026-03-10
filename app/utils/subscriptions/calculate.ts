@@ -10,32 +10,24 @@ export const calculateMonthlyTotal = (
   data: SubscriptionItem[],
   selectedDate: Date
 ): number => {
-  // 1. 비교를 위해 선택된 날짜에서 '월' 정보만 추출 (1~12월)
-  const currentMonth = selectedDate.getMonth() + 1;
+  const currentMonthKey = `${selectedDate.getFullYear()}-${String(
+    selectedDate.getMonth() + 1
+  ).padStart(2, "0")}`;
 
   return data.reduce((acc, sub) => {
-    // 2. 유료 결제(PAID) 상태가 아닌 데이터(무료 체험 등)는 계산에서 제외
-    // (소문자 "paid"에서 대문자 "PAID"로 변경!)
-    if (sub.payment_type !== "PAID") return acc;
+    if (sub.payment_type !== "PAID" || sub.status !== "ACTIVE") return acc;
 
-    // 3. 결제 주기(billing_cycle)에 따른 분기 처리
-
-    // 3-1. 월간 결제(MONTHLY)인 경우: 매달 지불하므로 무조건 합산
     if (sub.billing_cycle === "MONTHLY") {
       return acc + sub.total_amount;
     }
 
-    // 3-2. 연간 결제(YEARLY)인 경우: 다음 결제일(next_payment_date)에서 월을 추출해, 보고 있는 월과 일치할 때만 합산
     if (sub.billing_cycle === "YEARLY") {
-      // "2027-02-24" 같은 문자열에서 날짜 객체를 만들어 월을 빼옵니다.
-      const billingMonth = new Date(sub.next_payment_date).getMonth() + 1;
-
-      if (billingMonth === currentMonth) {
+      const billingMonthKey = sub.next_payment_date.slice(0, 7);
+      if (billingMonthKey === currentMonthKey) {
         return acc + sub.total_amount;
       }
     }
 
-    // 4. 그 외 조건에 맞지 않는 데이터는 누적값 그대로 반환
     return acc;
   }, 0);
 };
