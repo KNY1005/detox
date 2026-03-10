@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import AIAnalysisBanner from "./_components/ai-analysis-banner/ai-analysis-banner";
 import Header from "@/app/components/header";
-import BottomNav from "@/app/components/bottomNav";
+import BottomNav from "@/app/components/bottom-nav";
 import MonthExpenseSelector from "./_components/month-expense-selector";
 import ComparisonInsight from "./_components/comparison-insight";
 import ComparisonChart from "./_components/comparison-chart";
