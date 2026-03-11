@@ -1,6 +1,8 @@
 import { useAnalysisStore } from "@/store/useAnalysisStore";
 import { MOCK_SUBSCRIPTIONS } from "@/app/statistics/mock-subscriptions";
 
+const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "";
+
 // AI 분석 요청 및 스토어 업데이트
 export const fetchAIAnalysis = async (
   questionType:
@@ -15,16 +17,19 @@ export const fetchAIAnalysis = async (
 
   try {
     // 백엔드 AI 분석 API 호출
-    const response = await fetch("/api/analyze-subscription", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        type: questionType,
-        user_subscriptions: MOCK_SUBSCRIPTIONS,
-      }),
-    });
+    const response = await fetch(
+      `${NEXT_PUBLIC_BASE_URL}/api/analyze-subscription`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          type: questionType,
+          user_subscriptions: MOCK_SUBSCRIPTIONS,
+        }),
+      }
+    );
 
     if (!response.ok) throw new Error("AI 분석 실패");
 

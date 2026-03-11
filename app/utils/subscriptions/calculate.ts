@@ -15,13 +15,13 @@ export const calculateMonthlyTotal = (
   ).padStart(2, "0")}`;
 
   return data.reduce((acc, sub) => {
-    if (sub.payment_type !== "PAID" || sub.status !== "ACTIVE") return acc;
+    if (sub.payment_type !== "paid" || sub.status !== "active") return acc;
 
-    if (sub.billing_cycle === "MONTHLY") {
+    if (sub.billing_cycle === "monthly") {
       return acc + sub.total_amount;
     }
 
-    if (sub.billing_cycle === "YEARLY") {
+    if (sub.billing_cycle === "yearly" && sub.next_payment_date) {
       const billingMonthKey = sub.next_payment_date.slice(0, 7);
       if (billingMonthKey === currentMonthKey) {
         return acc + sub.total_amount;
