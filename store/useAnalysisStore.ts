@@ -53,11 +53,40 @@ export type AnalysisResult =
   | MaintenancePayload
   | PaymentSchedulePayload;
 
+export type AnalysisType = AnalysisResult["type"];
+
+// 런타임 타입 검증 로직
+
+const isAnalysisType = (value: unknown): value is AnalysisType => {
+  return (
+    value === "STATISTICS" ||
+    value === "RECOMMENDATION" ||
+    value === "MAINTENANCE" ||
+    value === "PAYMENT_SCHEDULE"
+  );
+};
+
+const isAnalysisResult = (value: unknown): value is AnalysisResult => {
+  if (!value || typeof value !== "object") return false;
+  const data = value as Record<string, unknown>;
+
+  return (
+    isAnalysisType(data.type) &&
+    typeof data.title === "string" &&
+    typeof data.description === "string" &&
+    typeof data.last_updated === "string" &&
+    typeof data.payload === "object" &&
+    data.payload !== null
+  );
+};
+
 // 스토어 로직
+
 interface AnalysisState {
   result: AnalysisResult | null;
   isLoading: boolean;
-  setResult: (newResult: AnalysisResult) => void;
+
+  setResult: (newResult: unknown) => void;
   setIsLoading: (status: boolean) => void;
   clearResult: () => void;
 }
@@ -67,7 +96,20 @@ export const useAnalysisStore = create<AnalysisState>()(
     (set) => ({
       result: null,
       isLoading: false,
-      setResult: (newResult) => set({ result: newResult, isLoading: false }),
+
+      setResult: (newResult) => {
+        if (!isAnalysisResult(newResult)) {
+          console.error(
+            "[AnalysisStore] 유효하지 않은 데이터 형식입니다:",
+            newResult
+          );
+          return;
+        }
+
+        // 검증을 통과한 경우에만 result에 저장
+        set({ result: newResult, isLoading: false });
+      },
+
       setIsLoading: (status) => set({ isLoading: status }),
       clearResult: () => set({ result: null, isLoading: false }),
     }),
