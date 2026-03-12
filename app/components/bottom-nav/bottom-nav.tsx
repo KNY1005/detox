@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import {
   faChartSimple,
   faCircleUser,
@@ -17,6 +18,9 @@ const NAV_ITEMS = [
   { href: "/mypage", label: "내정보", icon: faCircleUser },
 ];
 
+const BOTTOM_NAV_HEIGHT_CLASS = "h-[calc(60px+env(safe-area-inset-bottom))]";
+const BOTTOM_NAV_SAFE_AREA_CLASS = "pb-[env(safe-area-inset-bottom)]";
+
 export default function BottomNav() {
   const pathname = usePathname();
   const isActive = (href: string) =>
@@ -25,21 +29,31 @@ export default function BottomNav() {
       : pathname === href || pathname.startsWith(`${href}/`);
 
   return (
-    <nav
-      className="max-w-(--max-width) rounded-t-lg fixed bottom-0 left-0 right-0 mx-auto w-full h-[60px] bg-white shadow-xl flex justify-around items-center"
-      aria-label="하단 네비게이션"
-    >
-      {NAV_ITEMS.map(({ href, icon, label }) => (
-        <Link
-          key={href}
-          href={href}
-          className={`flex flex-col items-center justify-around gap-1 ${isActive(href) ? "text-blue-400" : "text-gray-300"}`}
-          aria-current={isActive(href) ? "page" : undefined}
-        >
-          <FontAwesomeIcon size="lg" icon={icon} />
-          <span className="text-xs">{label}</span>
-        </Link>
-      ))}
-    </nav>
+    <>
+      <div aria-hidden="true" className={BOTTOM_NAV_HEIGHT_CLASS} />
+      <nav
+        className={cn(
+          "fixed bottom-0 left-0 z-10 flex w-full items-center justify-around rounded-t-lg bg-white shadow-xl",
+          BOTTOM_NAV_HEIGHT_CLASS,
+          BOTTOM_NAV_SAFE_AREA_CLASS
+        )}
+        aria-label="하단 네비게이션"
+      >
+        {NAV_ITEMS.map(({ href, icon, label }) => (
+          <Link
+            key={href}
+            href={href}
+            className={cn(
+              "flex flex-col items-center justify-around gap-1",
+              isActive(href) ? "text-blue-400" : "text-gray-300"
+            )}
+            aria-current={isActive(href) ? "page" : undefined}
+          >
+            <FontAwesomeIcon size="lg" icon={icon} />
+            <span className="text-xs">{label}</span>
+          </Link>
+        ))}
+      </nav>
+    </>
   );
 }
