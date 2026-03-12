@@ -19,7 +19,7 @@ import { useToast } from "../hooks/useToast";
 
 export default function Page() {
   const router = useRouter();
-  const { errorToast } = useToast();
+  const { error } = useToast();
   const logoutMutation = useLogoutMutation();
   const currentUserQuery = useCurrentUserQuery();
   const userProfileQuery = useUserProfileQuery(currentUserQuery.data?.id);
@@ -34,9 +34,9 @@ export default function Page() {
     try {
       await logoutMutation.mutateAsync();
       router.push("/login");
-    } catch (error) {
-      console.error(error);
-      errorToast("로그아웃에 실패했어요.");
+    } catch (logoutError) {
+      console.error(logoutError);
+      error("로그아웃에 실패했어요.");
     }
   };
 

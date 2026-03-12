@@ -1,9 +1,9 @@
 "use client";
-
-import CommunityItem, { type CommunityListItem } from "./community-item";
+import CommunityItem from "./community-item";
+import type { CommunityListItemData } from "../_types";
 
 type CommunityListProps = {
-  items: CommunityListItem[];
+  items: CommunityListItemData[];
 };
 
 export default function CommunityList({ items }: CommunityListProps) {

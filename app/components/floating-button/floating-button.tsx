@@ -31,7 +31,7 @@ export default function FloatingButton({ variant }: FloatingButtonProps) {
   if (variant === "create") {
     return (
       <Link
-        href="/write"
+        href="/community/new"
         aria-label={ariaLabel}
         className={cn("btn btn-rounded mr-6", className)}
       >

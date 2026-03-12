@@ -27,8 +27,7 @@ function isNicknameConflictError(error: {
     .toLowerCase();
 
   const isUniqueViolation =
-    error.code === "23505" ||
-    errorMessage.includes("duplicate key");
+    error.code === "23505" || errorMessage.includes("duplicate key");
 
   return isUniqueViolation && errorMessage.includes("nickname");
 }
@@ -63,7 +62,11 @@ export function useAnonymousLoginMutation() {
 
       let upsertError: Awaited<ReturnType<typeof upsertUser>>["error"] = null;
 
-      for (let retryCount = 0; retryCount < NICKNAME_MAX_RETRY_COUNT; retryCount++) {
+      for (
+        let retryCount = 0;
+        retryCount < NICKNAME_MAX_RETRY_COUNT;
+        retryCount++
+      ) {
         const { error } = await upsertUser({
           ...userPayload,
           nickname: generateNickname(),

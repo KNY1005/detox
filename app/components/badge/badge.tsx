@@ -1,3 +1,5 @@
+import { cn } from "@/lib/utils";
+
 type BadgeVariant = "primary" | "danger";
 
 const variantClass: Record<BadgeVariant, string> = {
@@ -14,7 +16,10 @@ export default function Badge({
 }) {
   return (
     <span
-      className={`rounded-lg text-xs leading-none font-bold h-[25px] py-1 px-2 inline-flex items-center justify-center ${variantClass[variant]}`}
+      className={cn(
+        "inline-flex h-[25px] items-center justify-center rounded-lg px-2 py-1 text-xs leading-none font-bold",
+        variantClass[variant]
+      )}
     >
       {children}
     </span>

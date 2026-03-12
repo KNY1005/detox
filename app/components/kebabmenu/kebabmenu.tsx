@@ -2,6 +2,7 @@
 
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { cn } from "@/lib/utils";
 import {
   faEllipsisVertical,
   faPenToSquare,
@@ -31,7 +32,10 @@ const KebabMenu = ({
       <DropdownMenuPrimitive.Trigger asChild>
         <button
           type="button"
-          className={`cursor-pointer flex items-center justify-center w-11 h-11 hover:bg-gray-50 rounded-full transition-colors outline-none ${className}`}
+          className={cn(
+            "flex h-11 w-11 cursor-pointer items-center justify-center rounded-full outline-none transition-colors hover:bg-gray-50",
+            className
+          )}
         >
           <FontAwesomeIcon
             icon={faEllipsisVertical}

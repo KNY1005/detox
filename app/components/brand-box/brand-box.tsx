@@ -43,7 +43,7 @@ export default function BrandBox({
   const baseClasses = cn(
     "flex items-center justify-center border border-gray-100 bg-white",
     onClick && "cursor-pointer",
-    onClick && isActive && "bg-blue-50 border-blue-300",
+    isActive && "bg-blue-50 border-blue-300",
     sizeMap[size],
     className
   );

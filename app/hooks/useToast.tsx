@@ -51,13 +51,6 @@ export function useToast() {
     []
   );
 
-  const errorToast = useCallback(
-    (message: React.ReactNode, options?: ExternalToast) => {
-      return variantToast("error", message, options);
-    },
-    [variantToast]
-  );
-
   const success = useCallback(
     (message: React.ReactNode, options?: ExternalToast) => {
       return variantToast("success", message, options);
@@ -117,7 +110,6 @@ export function useToast() {
     toast,
     variantToast,
     iconToast,
-    errorToast,
     success,
     error,
     info,
