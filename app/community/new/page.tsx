@@ -10,7 +10,6 @@ import { useToast } from "@/app/hooks/useToast";
 import type { CommunityServiceValue } from "../_types";
 import { useCurrentUserQuery } from "@/query/users";
 import { useCreateCommunityPostMutation } from "@/query/community";
-import CommunityAuthGuard from "../_components/community-auth-guard";
 
 function CommunityNewPageContent() {
   const router = useRouter();
@@ -89,9 +88,5 @@ function CommunityNewPageContent() {
 }
 
 export default function CommunityNewPage() {
-  return (
-    <CommunityAuthGuard>
-      <CommunityNewPageContent />
-    </CommunityAuthGuard>
-  );
+  return <CommunityNewPageContent />;
 }
