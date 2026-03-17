@@ -1,14 +1,12 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-// 공통 필드
 interface BaseAnalysis {
   title: string;
   description: string;
   last_updated: string;
 }
 
-// 타입별 페이로드 정의
 interface StatisticsPayload extends BaseAnalysis {
   type: "STATISTICS";
   payload: {
@@ -46,7 +44,6 @@ interface PaymentSchedulePayload extends BaseAnalysis {
   };
 }
 
-// 최종 분석 결과 타입
 export type AnalysisResult =
   | StatisticsPayload
   | RecommendationPayload
@@ -54,8 +51,6 @@ export type AnalysisResult =
   | PaymentSchedulePayload;
 
 export type AnalysisType = AnalysisResult["type"];
-
-// 런타임 타입 검증 로직
 
 const isAnalysisType = (value: unknown): value is AnalysisType => {
   return (
@@ -79,8 +74,6 @@ const isAnalysisResult = (value: unknown): value is AnalysisResult => {
     data.payload !== null
   );
 };
-
-// 스토어 로직
 
 interface AnalysisState {
   result: AnalysisResult | null;
@@ -106,7 +99,6 @@ export const useAnalysisStore = create<AnalysisState>()(
           return;
         }
 
-        // 검증을 통과한 경우에만 result에 저장
         set({ result: newResult, isLoading: false });
       },
 
