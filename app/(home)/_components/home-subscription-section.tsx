@@ -1,30 +1,19 @@
 import Link from "next/link";
 import SubscriptionList from "@/app/components/subscription-list";
+import Button from "@/app/components/button";
 import type { SubscriptableBrandType } from "@/app/utils/brand/type";
-
-export interface HomeSubscriptionItem {
-  id: number;
-  href: string;
-  brandType: SubscriptableBrandType;
-  name: string;
-  price?: number;
-  billingCycle: "월간결제" | "연간결제";
-  badgeLabel: string;
-  badgeVariant: "primary" | "danger";
-  group?: boolean;
-  groupCount?: number;
-}
+import type { Tables } from "@/types/supabase.types";
 
 interface Props {
   hasSubscription: boolean;
-  subscriptionList: HomeSubscriptionItem[];
+  subscriptions: Tables<"subscription">[];
   subscriptionCount: number;
   thisMonthTotal: number;
 }
 
 export default function HomeSubscriptionSection({
   hasSubscription,
-  subscriptionList,
+  subscriptions,
   subscriptionCount,
   thisMonthTotal,
 }: Props) {
@@ -39,18 +28,16 @@ export default function HomeSubscriptionSection({
           <h6 className="header-md">{thisMonthTotal.toLocaleString()}원</h6>
         </div>
         <ul className="px-6 w-full">
-          {subscriptionList.map((item) => (
+          {subscriptions.map((item) => (
             <li key={item.id}>
               <SubscriptionList
-                href={item.href}
-                brandType={item.brandType}
-                name={item.name}
-                price={item.price}
-                billingCycle={item.billingCycle}
-                badgeLabel={item.badgeLabel}
-                badgeVariant={item.badgeVariant}
-                group={item.group}
-                groupCount={item.groupCount}
+                href={`/subscription/${item.id}`}
+                brandType={item.service as SubscriptableBrandType}
+                price={item.total_amount / Math.max(item.member_count, 1)}
+                billingCycle={item.billing_cycle}
+                group={item.subscription_mode === "group"}
+                groupCount={Math.max(item.member_count - 1, 0)}
+                isFreeTrial={item.payment_type === "trial"}
               />
             </li>
           ))}
@@ -67,8 +54,10 @@ export default function HomeSubscriptionSection({
         )}
       </div>
       <div className="mx-6 btn-wrap">
-        <Link href="/subscription/add" className="btn btn-primary btn-lg">
-          구독 추가하기
+        <Link href="/subscription/add">
+          <Button variant="primary" size="lg">
+            구독 추가하기
+          </Button>
         </Link>
       </div>
     </section>

@@ -33,7 +33,7 @@ export default function FilterChips({
         aria-pressed={value === "all"}
         onClick={() => onChange("all")}
         className={cn(
-          "shrink-0 rounded-xl px-4 py-2 body-lg transition-colors",
+          "shrink-0 rounded-xl px-3 py-2 body-lg transition-colors",
           value === "all"
             ? "bg-brand-primary text-white font-bold"
             : "bg-white text-gray-300 border border-gray-100"
@@ -50,7 +50,7 @@ export default function FilterChips({
             aria-pressed={isSelected}
             onClick={() => onChange(option.value)}
             className={cn(
-              "shrink-0 rounded-xl px-4 py-2 body-lg transition-colors",
+              "shrink-0 rounded-xl px-3 py-2 body-lg transition-colors",
               isSelected
                 ? "bg-brand-primary text-white font-bold"
                 : "bg-white text-gray-300 border border-gray-100"

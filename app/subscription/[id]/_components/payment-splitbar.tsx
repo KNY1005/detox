@@ -1,11 +1,11 @@
-type SingleProps = {
-  type: "single";
+type SoloProps = {
+  type: "solo";
   myAmount: number;
   label?: string;
 };
 
-type MultiProps = {
-  type: "multi";
+type GroupProps = {
+  type: "group";
   myAmount: number;
   totalAmount: number;
   /** 나를 제외한 파티원 수 */
@@ -13,18 +13,18 @@ type MultiProps = {
   label?: string;
 };
 
-type PaymentSplitBarProps = SingleProps | MultiProps;
+type PaymentSplitBarProps = SoloProps | GroupProps;
 
 const formatKRW = (amount: number) => amount.toLocaleString("ko-KR") + "원";
 
 export default function PaymentSplitBar(props: PaymentSplitBarProps) {
   const { myAmount, label = "내 부담금" } = props;
-  const isMulti = props.type === "multi";
+  const isGroup = props.type === "group";
 
-  const partyTotal = isMulti
+  const partyTotal = isGroup
     ? Math.max(props.totalAmount - props.myAmount, 0)
     : 0;
-  const hasPartyShare = isMulti && props.totalAmount > 0 && partyTotal > 0;
+  const hasPartyShare = isGroup && props.totalAmount > 0 && partyTotal > 0;
   const myPct = hasPartyShare
     ? Math.round((props.myAmount / props.totalAmount) * 100)
     : 100;
@@ -36,7 +36,7 @@ export default function PaymentSplitBar(props: PaymentSplitBarProps) {
       <div className="flex w-full rounded-md overflow-hidden">
         {/* 내 부담금 */}
         <div
-          className="flex items-center px-3 py-1 bg-state-primary shrink-0 transition-all duration-300"
+          className="flex items-center justify-center px-3 py-1 bg-state-primary shrink-0 transition-all duration-300"
           style={{ width: `${myPct}%`, minWidth: 80 }}
         >
           <span className="body-md font-bold text-white whitespace-nowrap">

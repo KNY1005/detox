@@ -11,15 +11,25 @@ import { SubscriptableBrandType } from "@/app/utils/brand/type";
 import FilterChips from "../../filter-chips";
 import BrandGrid from "./brand-grid";
 
-interface Props {
-  onNext: () => void;
+interface Values {
+  service: SubscriptableBrandType;
 }
-export default function SelectBrand({ onNext }: Props) {
+
+interface Props {
+  values?: Partial<Values>;
+  onNext: (values: Values) => void;
+}
+export default function SelectBrand({ values, onNext }: Props) {
   const [filter, setFilter] = useState("all");
   const [selectedBrand, setSelectedBrand] =
-    useState<SubscriptableBrandType | null>(null);
+    useState<SubscriptableBrandType | null>(values?.service ?? null);
 
   const filteredBrands = useMemo(() => getBrandsByCategory(filter), [filter]);
+
+  const handleNext = () => {
+    if (!selectedBrand) return;
+    onNext({ service: selectedBrand });
+  };
 
   return (
     <>
@@ -44,7 +54,12 @@ export default function SelectBrand({ onNext }: Props) {
       </div>
 
       <BottomCTA>
-        <Button variant="primary" size="lg" onClick={onNext}>
+        <Button
+          variant="primary"
+          size="lg"
+          onClick={handleNext}
+          disabled={!selectedBrand}
+        >
           다음
         </Button>
       </BottomCTA>

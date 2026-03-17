@@ -3,13 +3,53 @@ import Button from "@/app/components/button";
 import Input from "@/app/components/input";
 import SegmentedControl from "@/app/components/segmented-control";
 import { useState } from "react";
+import {
+  PaymentType,
+  SubscriptionMode,
+  type SubscriptionFormData,
+} from "../../../types/type";
+import {
+  clampTrialMonths,
+  isSelectPaymentTypeValid,
+} from "@/app/components/subscription-form/utils";
+
+interface Values {
+  subscription_mode: SubscriptionMode;
+  payment_type: PaymentType;
+  member_count: number;
+  total_amount: number;
+  trial_months: number;
+}
 
 interface Props {
-  onNext: () => void;
+  values?: Partial<SubscriptionFormData>;
+  onNext: (values: Values) => void;
+  loading?: boolean;
+  /** 이전 step 필수 필드 누락 시 true (syncWithQuery URL 직접 접근 대비) */
+  submitDisabled?: boolean;
 }
-export default function SelectPaymentType({ onNext }: Props) {
-  const [paymentType, setPaymentType] = useState("solo");
-  const [paymentMethod, setPaymentMethod] = useState("paid");
+export default function SelectPaymentType({
+  values,
+  onNext,
+  loading,
+  submitDisabled = false,
+}: Props) {
+  const [subscriptionMode, setSubscriptionMode] = useState<SubscriptionMode>(
+    values?.subscription_mode ?? "solo"
+  );
+  const [paymentType, setPaymentType] = useState<PaymentType>(
+    values?.payment_type ?? "paid"
+  );
+  const [memberCount, setMemberCount] = useState<number | null>(() => {
+    const mode = values?.subscription_mode ?? "solo";
+    return mode === "solo" ? 1 : (values?.member_count ?? null);
+  });
+  const [trialMonthCount, setTrialMonthCount] = useState<number | null>(
+    values?.trial_months ?? null
+  );
+  const [totalAmount, setTotalAmount] = useState<number | null>(
+    values?.total_amount ?? null
+  );
   return (
     <>
       <div className="flex flex-col gap-5 px-6 relative">
@@ -24,54 +64,116 @@ export default function SelectPaymentType({ onNext }: Props) {
         <SegmentedControl
           options={[
             { label: "혼자서", value: "solo" },
-            { label: "여럿이서", value: "shared" },
+            { label: "여럿이서", value: "group" },
           ]}
-          value={paymentType}
-          onValueChange={setPaymentType}
+          value={subscriptionMode}
+          onValueChange={(value) => {
+            const mode = value as SubscriptionMode;
+            setSubscriptionMode(mode);
+            if (mode === "solo") setMemberCount(1);
+          }}
         />
-        {paymentType === "shared" && (
+        {subscriptionMode === "group" && (
           <Input
             label="총 몇명이서 구독하시나요?"
             placeholder="사람 수를 입력해주세요"
             suffix="명"
             type="number"
+            onChange={(e) => {
+              setMemberCount(Number(e.target.value));
+            }}
+            value={memberCount ? memberCount.toString() : ""}
           />
         )}
 
         <SegmentedControl
           options={[
             { label: "유료결제", value: "paid" },
-            { label: "무료결제", value: "free" },
+            { label: "무료결제", value: "trial" },
           ]}
-          value={paymentMethod}
-          onValueChange={setPaymentMethod}
+          value={paymentType}
+          onValueChange={(value) => {
+            const type = value as PaymentType;
+            setPaymentType(type);
+            if (type === "paid") {
+              setTrialMonthCount(0);
+              setTotalAmount(0);
+            } else {
+              setTotalAmount(0);
+            }
+          }}
         />
-        {paymentMethod === "paid" && (
+
+        {paymentType === "paid" && (
           <Input
-            prefix="매월"
-            label="매월 얼마를 내고 있나요?"
+            prefix={values?.billing_cycle === "monthly" ? "매월" : "매년"}
+            label={`${values?.billing_cycle === "monthly" ? "매월" : "매년"} 얼마를 내고 있나요?`}
             placeholder="총 금액을 입력하세요"
             suffix="원"
+            onChange={(e) => {
+              setTotalAmount(Number(e.target.value));
+            }}
+            value={totalAmount ? totalAmount.toString() : ""}
           />
         )}
-        {paymentMethod === "free" && (
-          <Input
-            label="무료체험은 얼마나 이용할 수 있나요?"
-            placeholder="개월수를 입력해주세요"
-            suffix="개월"
-            type="number"
-            onBlur={(e) => {
-              if (!e.target.value) return;
-              const value = Math.min(12, Math.max(1, Number(e.target.value)));
-              e.target.value = String(value);
-            }}
-          />
+
+        {paymentType === "trial" && (
+          <>
+            <Input
+              label="무료체험은 얼마나 이용할 수 있나요?"
+              placeholder="개월수를 입력해주세요"
+              suffix="개월"
+              type="number"
+              onChange={(e) => {
+                setTrialMonthCount(Number(e.target.value));
+              }}
+              value={trialMonthCount ? trialMonthCount.toString() : ""}
+              onBlur={(e) => {
+                if (e.target.value === "" || e.target.value === "0") return;
+                const value = clampTrialMonths(Number(e.target.value));
+                setTrialMonthCount(value);
+              }}
+            />
+            <Input
+              prefix={values?.billing_cycle === "monthly" ? "매월" : "매년"}
+              label={`무료체험이 끝난뒤 ${values?.billing_cycle === "monthly" ? "매월" : "매년"} 얼마를 내야 하나요?`}
+              placeholder="총 금액을 입력하세요"
+              suffix="원"
+              onChange={(e) => {
+                setTotalAmount(Number(e.target.value));
+              }}
+              value={totalAmount ? totalAmount.toString() : ""}
+            />
+          </>
         )}
       </div>
 
       <BottomCTA>
-        <Button variant="primary" size="lg" onClick={onNext}>
-          다음
+        <Button
+          variant="primary"
+          size="lg"
+          onClick={() =>
+            onNext({
+              subscription_mode: subscriptionMode,
+              payment_type: paymentType,
+              member_count: subscriptionMode === "solo" ? 1 : (memberCount ?? 0),
+              total_amount: totalAmount ?? 0,
+              trial_months: trialMonthCount ?? 0,
+            })
+          }
+          disabled={
+            submitDisabled ||
+            !isSelectPaymentTypeValid(
+              subscriptionMode,
+              paymentType,
+              memberCount,
+              totalAmount,
+              trialMonthCount
+            )
+          }
+          loading={loading}
+        >
+          저장
         </Button>
       </BottomCTA>
     </>
