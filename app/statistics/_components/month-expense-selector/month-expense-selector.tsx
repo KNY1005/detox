@@ -23,12 +23,14 @@ export default function MonthExpenseSelector({
     onChangeDate(newDate);
   };
 
+  const shortYear = selectedDate.getFullYear().toString().slice(-2);
+
   return (
     <div className="flex flex-col items-start justify-center w-full pt-5 bg-white px-5">
       <div className="flex items-center">
         <button
           type="button"
-          arta-label="이전 달 보기"
+          aria-label="이전 달 보기"
           onClick={() => changeMonth(-1)}
           className="text-black hover:opacity-50 transition-colors p-1"
         >
@@ -37,13 +39,13 @@ export default function MonthExpenseSelector({
 
         <div className="min-w-40 text-center px-1">
           <h2 className="body-lg font-bold text-black tracking-tight whitespace-nowrap">
-            {selectedDate.getMonth() + 1}월에 사용한 총 금액
+            {shortYear}년 {selectedDate.getMonth() + 1}월에 사용한 총 금액
           </h2>
         </div>
 
         <button
           type="button"
-          arta-label="다음 달 보기"
+          aria-label="다음 달 보기"
           onClick={() => changeMonth(1)}
           className="text-black hover:opacity-50 transition-colors p-1"
         >

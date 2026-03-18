@@ -6,11 +6,9 @@ interface QuickQuestionsProps {
 
 export default function QuickQuestions({ onSelect }: QuickQuestionsProps) {
   const questions = [
-    "내 소비 습관 기준으로 추천할 구독이 있을까?",
-    "이 구독 해지하면 1년에 얼마 아낄 수 있을까?",
-    "이 구독 더 저렴하게 이용할 수 있는 할인방법 있어?",
-    "구독료를 줄이려면 뭐부터 해지하는게 좋을까?",
-    "내 소비 습관으로 볼 때 추천할만한 구독 상품이 있어?",
+    "내 소비 습관에 맞는 통신사 결합 할인 혜택을 분석해줘",
+    "내가 중복으로 내는 구독료가 얼마인지 알려줘",
+    "최근 3개월간 나의 구독 소비 추이를 분석해줘",
   ];
 
   return (
