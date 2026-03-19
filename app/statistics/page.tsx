@@ -18,20 +18,12 @@ import { calculateMonthlyTotal } from "@/app/utils/subscriptions/calculate";
 import { useCurrentUserQuery, useUserProfileQuery } from "@/query/users";
 import { useAnalysisStore } from "@/store/useAnalysisStore";
 import { AnalysisResponse } from "@/app/utils/subscriptions/validation";
+import { Tables } from "@/types/supabase.types";
 
 const supabase = createBrowserClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
-
-interface Subscription {
-  id: string;
-  service: string;
-  total_amount: number;
-  payment_date: string;
-  period?: "month" | "year";
-  user_id: string;
-}
 
 export default function StatisticsPage() {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -49,7 +41,7 @@ export default function StatisticsPage() {
   const { result: analysisData } = useAnalysisStore();
 
   const { data: subscriptions = [], isLoading: isSubscriptionsLoading } =
-    useQuery<Subscription[]>({
+    useQuery<Tables<"subscription">[]>({
       queryKey: ["subscriptions", user?.id],
       queryFn: async () => {
         if (!user?.id) return [];
@@ -57,7 +49,7 @@ export default function StatisticsPage() {
           .from("subscription")
           .select("*")
           .eq("user_id", user.id);
-        return (data as Subscription[]) || [];
+        return (data as Tables<"subscription">[]) || [];
       },
       enabled: !!user?.id,
     });

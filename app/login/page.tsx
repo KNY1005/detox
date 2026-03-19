@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import Button from "../components/button";
 import LoadingScreen from "../components/loading-screen";
 import SnsLoginButton from "./_components/sns-login-button";
@@ -16,7 +16,7 @@ import { useToast } from "../hooks/useToast";
 import { getSafeRedirectPath } from "@/app/utils/auth/get-safe-redirect-path";
 import { signInWithOAuth } from "@/services/users";
 
-export default function Page() {
+function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { error } = useToast();
@@ -105,5 +105,13 @@ export default function Page() {
         </TooltipContent>
       </Tooltip>
     </main>
+  );
+}
+
+export default function Page() {
+  return (
+    <Suspense fallback={<LoadingScreen message="잠시만 기다려 주세요." />}>
+      <LoginContent />
+    </Suspense>
   );
 }

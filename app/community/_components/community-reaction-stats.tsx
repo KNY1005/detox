@@ -95,7 +95,13 @@ function InteractiveCommunityReactionStats({
 
 export default function CommunityReactionStats(props: Props) {
   if (props.postId && props.commentInputRef) {
-    return <InteractiveCommunityReactionStats {...props} />;
+    return (
+      <InteractiveCommunityReactionStats
+        {...props}
+        postId={props.postId}
+        commentInputRef={props.commentInputRef}
+      />
+    );
   }
 
   return <CommunityReactionStatsView {...props} />;

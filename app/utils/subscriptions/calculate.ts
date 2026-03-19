@@ -1,4 +1,4 @@
-import { SubscriptionItem } from "@/app/statistics/mock-subscriptions";
+import { Tables } from "@/types/supabase.types";
 
 /**
  * @description 선택된 날짜(월) 기준, 사용자가 지불해야 하는 총 구독료를 계산합니다.
@@ -7,7 +7,7 @@ import { SubscriptionItem } from "@/app/statistics/mock-subscriptions";
  * @returns 해당 월의 총 결제 금액 (number)
  */
 export const calculateMonthlyTotal = (
-  data: SubscriptionItem[],
+  data: Tables<"subscription">[],
   selectedDate: Date
 ): number => {
   const currentMonthKey = `${selectedDate.getFullYear()}-${String(
