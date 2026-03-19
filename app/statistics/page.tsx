@@ -29,36 +29,30 @@ export default function StatisticsPage() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [currentSubscriptionIndex, setCurrentSubscriptionIndex] = useState(0);
   const [ageBandIndex, setAgeBandIndex] = useState(0);
-
-  const { data: user, isLoading: isUserLoading } = useCurrentUserQuery();
+  const { data: user } = useCurrentUserQuery();
   const { data: profile } = useUserProfileQuery(user?.id);
   const userName = profile?.nickname || "사용자";
   const { result: analysisData } = useAnalysisStore();
 
-  const {
-    data: subscriptions = [],
-    isLoading: isSubscriptionsLoading,
-    error: subscriptionsError,
-  } = useQuery<{ service: string; total_amount: number }[]>({
-    queryKey: ["subscriptions", user?.id],
-    queryFn: async () => {
-      if (!user?.id) return [];
-      const { data, error } = await supabase
-        .from("subscription")
-        .select("*")
-        .eq("user_id", user.id);
-      if (error) throw error;
-      return data ?? [];
-    },
-    enabled: !!user?.id,
-  });
+  type SubscriptionRow = Database["public"]["Tables"]["subscription"]["Row"];
 
-  const isAllEmpty =
-    !isUserLoading &&
-    !!user?.id &&
-    !isSubscriptionsLoading &&
-    !subscriptionsError &&
-    subscriptions.length === 0;
+  // 구독 데이터 쿼리
+  const { data: subscriptions = [], isLoading: isSubscriptionsLoading } =
+    useQuery<SubscriptionRow[]>({
+      queryKey: ["subscriptions", user?.id],
+      queryFn: async () => {
+        if (!user?.id) return [];
+        const { data } = await supabase
+          .from("subscription")
+          .select("*")
+          .eq("user_id", user.id);
+        return data || [];
+      },
+      enabled: !!user?.id,
+    });
+
+  // 구독 서비스가 하나도 없는 경우
+  const isAllEmpty = !isSubscriptionsLoading && subscriptions.length === 0;
 
   // 구독 서비스별 금액 요약 계산
   const subscriptionSummaries = useMemo(
