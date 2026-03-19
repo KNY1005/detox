@@ -27,7 +27,7 @@ export default function ComparisonInsight({
   return (
     <div className="flex flex-col items-start px-6 py-6 w-full">
       <h3 className="title-md text-black leading-tight">{title}</h3>
-      <div className="flex items-center mt-1 body-lg text-gray-400">
+      <div className="flex items-center mt-1 body-lg text-gray-300">
         <span>평균보다&nbsp;</span>
         <span className="font-bold text-brand-primary">
           {diffAmount.toLocaleString()}원

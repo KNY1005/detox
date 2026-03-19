@@ -8,6 +8,7 @@ config.autoAddCss = false; // 자동으로 CSS 추가하는 기능 끄기
 
 import "../styles/globals.css";
 import { AlertProvider } from "./components/alert";
+import GlobalTopFloatingButton from "./components/floating-button/global-top-floating-button";
 import { Toaster } from "./components/toast";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import QueryProvider from "./providers/query-client-provider";
@@ -43,6 +44,7 @@ export default function RootLayout({
             <AlertProvider />
             <Toaster />
             {children}
+            <GlobalTopFloatingButton />
           </TooltipProvider>
         </QueryProvider>
       </body>

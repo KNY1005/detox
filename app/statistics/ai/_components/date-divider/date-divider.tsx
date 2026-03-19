@@ -6,11 +6,11 @@ export default function DateDivider({ date }: { date?: string }) {
 
   return (
     <div className="flex items-center w-full px-6 mb-5">
-      <div className="flex-1 h-px bg-gray-200"></div>
-      <span className="mx-4 body-md text-gray-300 whitespace-nowrap">
+      <div className="flex-1 h-px bg-gray-100"></div>
+      <span className="mx-5 label-lg text-gray-300 whitespace-nowrap">
         {date || defaultDate}
       </span>
-      <div className="flex-1 h-px bg-gray-200"></div>
+      <div className="flex-1 h-px bg-gray-100"></div>
     </div>
   );
 }

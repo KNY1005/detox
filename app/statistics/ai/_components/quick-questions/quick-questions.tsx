@@ -18,7 +18,7 @@ export default function QuickQuestions({ onSelect }: QuickQuestionsProps) {
           type="button"
           key={idx}
           onClick={() => onSelect(q)}
-          className="body-md bg-gray-200 text-white px-4 py-2.5 rounded-lg rounded-tr-none transition-opacity text-right max-w-[90%]"
+          className="body-lg bg-gray-200 text-white px-3 py-3 rounded-lg rounded-tr-none transition-opacity text-right break-keep max-w-[90%]"
         >
           {q}
         </button>

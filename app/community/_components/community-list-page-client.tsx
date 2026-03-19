@@ -3,9 +3,11 @@
 import { Suspense, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
+import FloatingButton from "@/app/components/floating-button";
 import FeedbackState from "@/app/components/feedback-state";
 import Header from "@/app/components/header";
 import BottomNav from "@/app/components/bottom-nav";
+import { useTopFloatingButtonVisible } from "@/app/hooks/use-top-floating-button-visible";
 import BrandTabs from "./brand-tabs";
 import CommunityCreateFloatingButton from "./community-create-floating-button";
 import CommunityList from "./community-list";
@@ -13,6 +15,7 @@ import CommunityListErrorBoundary from "./community-list-error-boundary";
 import CommunityPostListSkeleton from "./community-post-list-skeleton";
 import type { CommunityListPage, CommunityServiceFilter } from "../_types";
 import { useSuspenseInfiniteCommunityListQuery } from "@/query/community";
+import { useCurrentUserQuery } from "@/query/users";
 
 interface CommunityListPageClientProps {
   initialService: CommunityServiceFilter;
@@ -94,7 +97,15 @@ export default function CommunityListPageClient({
   initialPage,
 }: CommunityListPageClientProps) {
   const router = useRouter();
+  const showTopFloatingButton = useTopFloatingButtonVisible();
+  const {
+    data: currentUser,
+    isPending: isCurrentUserPending,
+    isError: isCurrentUserError,
+  } = useCurrentUserQuery();
   const resetKey = `${initialService}:${initialPage.items.length}`;
+  const showCreateFloatingButton =
+    !isCurrentUserPending && !isCurrentUserError && Boolean(currentUser?.id);
 
   const handleChangeService = (nextService: CommunityServiceFilter) => {
     const nextUrl =
@@ -132,7 +143,21 @@ export default function CommunityListPageClient({
         </section>
 
         <div className="fixed right-0 bottom-24 z-10">
-          <CommunityCreateFloatingButton />
+          <div className="relative">
+            <div
+              className={`absolute right-0 transition-opacity duration-200 ease-out ${
+                showCreateFloatingButton ? "bottom-[calc(100%+0.75rem)]" : "bottom-0"
+              } ${
+                showTopFloatingButton
+                  ? "visible opacity-100"
+                  : "pointer-events-none invisible opacity-0"
+              }`}
+              aria-hidden={!showTopFloatingButton}
+            >
+              <FloatingButton variant="top" />
+            </div>
+            {showCreateFloatingButton ? <CommunityCreateFloatingButton /> : null}
+          </div>
         </div>
       </main>
 
