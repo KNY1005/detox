@@ -4,6 +4,7 @@ import {
   getNotifications,
   getPastNotifications,
   getTodayNotifications,
+  hasUnreadNotifications,
   readNotification,
 } from "@/services/notification";
 import {
@@ -19,6 +20,8 @@ export const notificationsKeys = {
   today: (userId: string) =>
     [...notificationsKeys.all, userId, "today"] as const,
   past: (userId: string) => [...notificationsKeys.all, userId, "past"] as const,
+  hasUnreadNotifications: (userId: string) =>
+    [...notificationsKeys.all, userId, "hasUnreadNotifications"] as const,
 };
 
 export function useNotifications(userId: string) {
@@ -95,5 +98,13 @@ export function useReadNotificationMutation(userId: string) {
         queryKey: notificationsKeys.list(userId),
       });
     },
+  });
+}
+
+export function useHasUnreadNotificationsQuery(userId: string) {
+  return useQuery({
+    queryKey: notificationsKeys.hasUnreadNotifications(userId),
+    queryFn: () => hasUnreadNotifications(userId),
+    enabled: !!userId && userId.length > 0,
   });
 }

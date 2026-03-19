@@ -2,8 +2,6 @@
 
 import Image from "next/image";
 import { AnalysisResponse } from "@/app/utils/subscriptions/validation";
-import BrandBox from "@/app/components/brand-box";
-import { SubscriptableBrandType } from "@/app/utils/brand/type";
 
 type AIStatus = "text" | "analyzing" | "error" | "chart";
 
@@ -32,26 +30,26 @@ export default function AIBubble({
             className="w-full h-full object-cover"
           />
         </div>
-        <span className="font-bold body-lg text-gray-900">AI디톡이</span>
+        <span className="font-bold body-lg text-gray-300">AI디톡이</span>
       </div>
 
       <div className="flex flex-col items-start max-w-[80%]">
-        <div className="bg-white border border-gray-100 px-4 py-3 rounded-2xl w-full">
+        <div className="bg-white border border-gray-100 rounded-tl-none px-4 py-3 rounded-lg w-full">
           {status === "analyzing" && (
-            <div className="flex items-center gap-3 py-1 text-brand-primary font-medium body-lg">
+            <div className="flex items-center gap-3 py-1 text-brand-primary body-lg">
               <span className="animate-pulse">●</span> 분석 중이니 잠시만
               기다려주세요
             </div>
           )}
 
           {status === "error" && (
-            <p className="body-lg text-red-500 font-medium">
+            <p className="body-lg text-red-500">
               분석에 실패했어요. 다시 시도해주세요.
             </p>
           )}
 
           {!analysisData && content && (
-            <p className="body-lg whitespace-pre-wrap font-medium text-gray-700 leading-relaxed">
+            <p className="body-lg whitespace-pre-wrap text-gray-400">
               {content}
             </p>
           )}

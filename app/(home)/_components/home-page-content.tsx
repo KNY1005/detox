@@ -10,7 +10,7 @@ import { useSupabase } from "@/hooks/useSupabase";
 export default function HomePageContent() {
   const { session } = useSupabase();
   const { data: subscriptions = [] } = useGetSubscriptionListQuery(
-    !!session?.user
+    session?.user?.id ?? ""
   );
 
   const hasSubscription = subscriptions.length > 0;
@@ -26,7 +26,7 @@ export default function HomePageContent() {
 
   return (
     <>
-      <Header rightContent="알람아이콘" />
+      <Header hasNotification />
       <main>
         <section className="px-6 py-5 mb-4 bg-white grid grid-cols-[1fr_100px] items-center justify-between">
           <HomeSummaryCard

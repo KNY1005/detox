@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { getLoginRedirectUrl } from "@/app/utils/auth/get-login-redirect-url";
 
@@ -12,9 +13,12 @@ export function useLoginRedirect(defaultTargetPath?: string) {
     ? `${pathname}?${searchParams.toString()}`
     : pathname;
 
-  const moveToLogin = (targetPath = defaultTargetPath ?? currentPath) => {
-    router.push(getLoginRedirectUrl(targetPath));
-  };
+  const moveToLogin = useCallback(
+    (targetPath = defaultTargetPath ?? currentPath) => {
+      router.push(getLoginRedirectUrl(targetPath));
+    },
+    [currentPath, defaultTargetPath, router]
+  );
 
   const redirectToLoginIfNeeded = (
     isLoggedIn: boolean,

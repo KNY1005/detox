@@ -3,6 +3,7 @@ import SubscriptionList from "@/app/components/subscription-list";
 import Button from "@/app/components/button";
 import type { SubscriptableBrandType } from "@/app/utils/brand/type";
 import type { Tables } from "@/types/supabase.types";
+import BottomCTA from "@/app/components/bottom-cta";
 
 interface Props {
   hasSubscription: boolean;
@@ -53,13 +54,13 @@ export default function HomeSubscriptionSection({
           </div>
         )}
       </div>
-      <div className="mx-6 btn-wrap">
+      <BottomCTA hasBottomNav>
         <Link href="/subscription/add">
           <Button variant="primary" size="lg">
             구독 추가하기
           </Button>
         </Link>
-      </div>
+      </BottomCTA>
     </section>
   );
 }

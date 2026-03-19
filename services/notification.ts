@@ -99,3 +99,19 @@ export async function readNotification(notificationId: string) {
 
   if (error) throw error;
 }
+
+/**
+ * 유저가 읽지 않은 알람이 있는지 조회합니다.
+ * @param userId 유저 ID
+ */
+export async function hasUnreadNotifications(userId: string) {
+  const { data, error } = await supabase
+    .from("notification")
+    .select("*")
+    .eq("user_id", userId)
+    .is("deleted_at", null)
+    .is("is_read", false);
+
+  if (error) throw error;
+  return data?.length > 0;
+}

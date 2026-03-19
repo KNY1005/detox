@@ -5,6 +5,10 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons/faChevronLeft";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBell } from "@fortawesome/free-solid-svg-icons";
+import { useHasUnreadNotificationsQuery } from "@/query/notification";
+import { useSupabase } from "@/hooks/useSupabase";
+import Link from "next/link";
 
 type HeaderVariant = "default" | "back" | "text";
 
@@ -15,6 +19,7 @@ interface Props {
   rightContent?: React.ReactNode;
   onBack?: () => void;
   fallbackPath?: string;
+  hasNotification?: boolean;
 }
 
 export default function Header({
@@ -24,8 +29,13 @@ export default function Header({
   rightContent,
   onBack,
   fallbackPath,
+  hasNotification = false,
 }: Props) {
   const router = useRouter();
+  const { session } = useSupabase();
+  const { data: hasUnreadNotifications } = useHasUnreadNotificationsQuery(
+    session?.user?.id ?? ""
+  );
 
   return (
     <header className="w-full">
@@ -82,7 +92,24 @@ export default function Header({
         </div>
 
         <div className="flex flex-1 justify-end mr-6 items-center">
-          <div className="">{rightContent}</div>
+          {!hasNotification && <div className="">{rightContent}</div>}
+          {hasNotification && (
+            <Link href="/notifications" aria-label="알림 페이지로 이동">
+              <button
+                type="button"
+                aria-label="알림"
+                className="relative cursor-pointer"
+              >
+                <FontAwesomeIcon
+                  icon={faBell}
+                  className="w-7 h-7 text-gray-300"
+                />
+                {hasUnreadNotifications && (
+                  <span className="absolute top-0 right-[-5px] w-[6px] h-[6px] bg-brand-primary rounded-full" />
+                )}
+              </button>
+            </Link>
+          )}
         </div>
       </div>
     </header>

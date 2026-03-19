@@ -1,5 +1,6 @@
 "use client";
 
+import { isAuthSessionMissingError } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
 import type {
   Tables,
@@ -31,7 +32,20 @@ export async function signOut() {
 }
 
 export async function getCurrentUser() {
-  return supabase.auth.getUser();
+  const result = await supabase.auth.getUser();
+
+  if (isAuthSessionMissingError(result.error)) {
+    return {
+      ...result,
+      data: {
+        ...result.data,
+        user: null,
+      },
+      error: null,
+    };
+  }
+
+  return result;
 }
 
 export async function getUserProfile(userId: string) {

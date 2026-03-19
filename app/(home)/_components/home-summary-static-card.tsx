@@ -1,5 +1,5 @@
 "use client";
-
+import { motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -18,9 +18,31 @@ export default function HomeSummaryStaticCard({ type }: Props) {
         <div className="title">
           {isEmpty ? (
             <>
-              <h2 className="text-2xl">숨겨진 구독 추가하고</h2>
-              <h1 className="header-md">
-                연간 최대 <span className="text-brand-primary">???원</span>
+              <h2 className="text-2xl overflow-hidden">
+                <motion.div
+                  initial={{ y: "110%" }}
+                  animate={{ y: 0 }}
+                  transition={{
+                    duration: 0.3,
+                    delay: 0.1,
+                    ease: "linear",
+                  }}
+                >
+                  숨겨진 구독 추가하고
+                </motion.div>
+              </h2>
+              <h1 className="header-md overflow-hidden">
+                <motion.div
+                  initial={{ y: "110%" }}
+                  animate={{ y: 0 }}
+                  transition={{
+                    duration: 0.3,
+                    delay: 0.3,
+                    ease: "linear",
+                  }}
+                >
+                  연간 최대 <span className="text-brand-primary">???원</span>
+                </motion.div>
               </h1>
             </>
           ) : (
@@ -34,7 +56,7 @@ export default function HomeSummaryStaticCard({ type }: Props) {
         </div>
 
         <Link
-          href="/통계메인"
+          href="/statistics"
           className="body-lg text-gray-300 inline-flex items-center gap-1 mt-2"
         >
           자세히 알아보기

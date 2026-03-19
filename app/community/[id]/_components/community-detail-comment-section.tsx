@@ -36,11 +36,13 @@ export default function CommunityDetailCommentSection({
     isError: isCurrentUserError,
   } = useCurrentUserQuery();
   const currentUserId = currentUser?.id;
-  const { redirectToLoginIfNeeded } = useLoginRedirect();
+  const { moveToLogin, redirectToLoginIfNeeded } = useLoginRedirect();
   const { mutateAsync: createCommunityComment, isPending: isCreatePending } =
     useCreateCommunityCommentMutation();
 
   const isLoggedIn = Boolean(currentUserId);
+  const isCommentInputReadOnly =
+    !isLoggedIn || isCurrentUserPending || isCreatePending;
 
   const handleCreateComment = async () => {
     if (isCurrentUserPending || isCurrentUserError) {
@@ -69,12 +71,12 @@ export default function CommunityDetailCommentSection({
     }
   };
 
-  const handleCommentFocus = () => {
+  const handleCommentLoginClick = () => {
     if (isCurrentUserPending || isCurrentUserError) {
       return;
     }
 
-    redirectToLoginIfNeeded(isLoggedIn);
+    moveToLogin();
   };
 
   const handleCommentKeyDown = async (
@@ -107,26 +109,37 @@ export default function CommunityDetailCommentSection({
       )}
 
       <div className="mt-4 flex items-center rounded-lg bg-gray-50 px-4 py-3">
-        <input
-          ref={commentInputRef}
-          type="text"
-          aria-label="댓글 입력"
-          value={comment}
-          onChange={(event) => setComment(event.target.value)}
-          onFocus={handleCommentFocus}
-          onKeyDown={handleCommentKeyDown}
-          placeholder={
-            isLoggedIn
-              ? "댓글을 입력하세요"
-              : "댓글 작성은 로그인 후 가능해요"
-          }
-          readOnly={!isLoggedIn || isCurrentUserPending || isCreatePending}
-          className="flex-1 bg-transparent text-base text-gray-400 outline-none placeholder:text-gray-300"
-        />
+        {isCurrentUserError ? (
+          <p className="flex-1 text-left text-base text-gray-300">
+            댓글을 입력할 수 없어요.
+          </p>
+        ) : isLoggedIn ? (
+          <input
+            ref={commentInputRef}
+            type="text"
+            aria-label="댓글 입력"
+            value={comment}
+            onChange={(event) => setComment(event.target.value)}
+            onKeyDown={handleCommentKeyDown}
+            placeholder="댓글을 입력하세요"
+            readOnly={isCommentInputReadOnly}
+            className="flex-1 bg-transparent text-base text-gray-400 outline-none placeholder:text-gray-300"
+          />
+        ) : (
+          <button
+            type="button"
+            aria-label="로그인 후 댓글 작성"
+            onClick={handleCommentLoginClick}
+            className="flex-1 bg-transparent text-left text-base text-gray-300 outline-none"
+          >
+            댓글 작성은 로그인 후 가능해요
+          </button>
+        )}
         <TextButton
           size="md"
           aria-label="댓글 전송"
           disabled={
+            !isLoggedIn ||
             isCurrentUserPending ||
             isCreatePending ||
             isCurrentUserError ||

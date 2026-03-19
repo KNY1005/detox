@@ -19,7 +19,7 @@ export default function AIAnalysisBanner({ isAllEmpty }: Props) {
           <span className="text-brand-primary">낭비되는 구독료</span>로<br />
           치킨을 먹을 수 있어요
         </h1>
-        <p className="bady-lg md:header-md text-gray-300 leading-relaxed">
+        <p className="body-lg md:header-md text-gray-300 leading-[140%]">
           숨겨진 구독료를 찾아
           <br />
           낭비를 줄여보세요

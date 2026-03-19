@@ -27,7 +27,7 @@ export default function HomeSummarySkeleton({ type }: Props) {
         </div>
 
         <Link
-          href="/통계메인"
+          href="/statistics"
           className="body-lg text-gray-300 inline-flex items-center gap-1 mt-2"
         >
           자세히 알아보기

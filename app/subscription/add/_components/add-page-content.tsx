@@ -22,14 +22,14 @@ import {
 const SUBSCRIPTION_ADD_PERSIST_KEY = "subscription-add";
 
 export default function AddPageContent() {
-  const router = useRouter();
+  const { replace, back } = useRouter();
   const { session } = useSupabase();
 
   const {
     currentStep,
     currentStepIndex,
     next,
-    back,
+    back: stepBack,
     setState,
     state,
     setStep,
@@ -65,6 +65,7 @@ export default function AddPageContent() {
         clearPersistedDraft();
       }
       success("구독이 추가되었습니다");
+      replace("/");
     } catch (err) {
       console.error(err);
       error("구독 추가에 실패했습니다");
@@ -76,12 +77,12 @@ export default function AddPageContent() {
       <Header
         variant="back"
         title="구독 추가"
-        onBack={() => back(router.back)}
+        onBack={() => stepBack(back)}
         rightContent={
           <TextButton
             onClick={() => {
               clearPersistedDraft?.();
-              router.back();
+              replace("/");
             }}
           >
             취소

@@ -23,10 +23,11 @@ export async function createSubscription(values: TablesInsert<"subscription">) {
 /**
  * 구독 목록 조회 (RLS로 현재 사용자 구독만 반환)
  */
-export async function getSubscriptionList() {
+export async function getSubscriptionList(userId: string) {
   const { data, error } = await supabase
     .from("subscription")
     .select("*")
+    .eq("user_id", userId)
     .order("created_at", { ascending: false });
 
   if (error) {

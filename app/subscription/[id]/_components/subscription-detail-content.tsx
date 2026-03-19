@@ -43,7 +43,7 @@ export default function SubscriptionDetailContent() {
     try {
       await deleteSubscription(id!);
       toast.success("구독이 삭제되었습니다.");
-      router.replace("/main");
+      router.replace("/");
     } catch (error) {
       console.error(error);
       toast.error("구독 삭제에 실패했습니다.");

@@ -10,8 +10,11 @@ import CommunityEditFormContent from "./_components/community-edit-form-content"
 
 function CommunityEditPageContent() {
   const { id } = useParams<{ id: string }>();
-  const { currentUserId, isPending: isCurrentUserPending, isError: isCurrentUserError } =
-    useCurrentAuthUser();
+  const {
+    currentUserId,
+    isPending: isCurrentUserPending,
+    isError: isCurrentUserError,
+  } = useCurrentAuthUser();
 
   const {
     data: communityDetail,

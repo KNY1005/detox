@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { getCurrentUser } from "@/services/users";
 
 export function useCurrentAuthUser() {
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
@@ -16,7 +16,7 @@ export function useCurrentAuthUser() {
         const {
           data: { user },
           error,
-        } = await supabase.auth.getUser();
+        } = await getCurrentUser();
 
         if (!isMounted) {
           return;

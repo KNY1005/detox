@@ -9,7 +9,6 @@ import Input from "@/app/components/input";
 import Button from "@/app/components/button";
 import BottomNav from "@/app/components/bottom-nav";
 import TextButton from "@/app/components/text-button";
-import { useRouter } from "next/navigation";
 import {
   useLogoutMutation,
   useUpdateUserProfileMutation,
@@ -17,6 +16,7 @@ import {
 } from "@/query/users";
 import { uploadProfileImage } from "@/services/storage";
 import { useToast } from "@/app/hooks/useToast";
+import { useRouter } from "next/navigation";
 
 interface Props {
   userId: string;
