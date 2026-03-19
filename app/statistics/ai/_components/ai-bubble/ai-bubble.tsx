@@ -2,8 +2,6 @@
 
 import Image from "next/image";
 import { AnalysisResponse } from "@/app/utils/subscriptions/validation";
-import BrandBox from "@/app/components/brand-box";
-import { SubscriptableBrandType } from "@/app/utils/brand/type";
 
 type AIStatus = "text" | "analyzing" | "error" | "chart";
 

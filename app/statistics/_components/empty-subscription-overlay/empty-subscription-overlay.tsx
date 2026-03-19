@@ -1,15 +1,25 @@
 "use client";
 
+import { useEffect } from "react";
 import Button from "@/app/components/button";
 import { useRouter } from "next/navigation";
 
 export default function EmptySubscriptionOverlay() {
   const router = useRouter();
 
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, []);
+
   return (
-    <div className="inset-0 z-40 flex flex-col items-center justify-center bg-white/70 backdrop-blur-[2px]">
-      <div className="text-center px-6 mb-12">
-        <h2 className="title-md text-black mb-2">구독 서비스를 추가하세요</h2>
+    <div className="absolute inset-0 z-40 flex flex-col items-center justify-center bg-white/70 backdrop-blur-xs px-6">
+      <div className="text-center mb-10">
+        <h2 className="text-xl font-bold text-black mb-2">
+          구독 서비스를 추가하세요
+        </h2>
         <p className="body-lg text-gray-500 leading-relaxed">
           추가된 구독 서비스가 없어
           <br />
@@ -19,7 +29,7 @@ export default function EmptySubscriptionOverlay() {
         </p>
       </div>
 
-      <div className="w-full px-6">
+      <div className="w-full max-w-sm">
         <Button
           variant="primary"
           size="lg"
