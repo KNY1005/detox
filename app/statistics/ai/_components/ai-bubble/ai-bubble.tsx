@@ -23,7 +23,7 @@ export default function AIBubble({
       <div className="flex items-center mb-2">
         <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center mr-2 overflow-hidden">
           <Image
-            src="/images/emoji/robot.png"
+            src="/images/emoji/ai-bot.png"
             alt="AI 디톡이"
             width={28}
             height={28}
