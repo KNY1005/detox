@@ -28,27 +28,36 @@ export default function StatisticsPage() {
   const [currentSubscriptionIndex, setCurrentSubscriptionIndex] = useState(0);
   const [ageBandIndex, setAgeBandIndex] = useState(0);
 
-  const { data: user } = useCurrentUserQuery();
+  const { data: user, isLoading: isUserLoading } = useCurrentUserQuery();
   const { data: profile } = useUserProfileQuery(user?.id);
   const userName = profile?.nickname || "사용자";
 
   const { result: analysisData } = useAnalysisStore();
 
-  const { data: subscriptions = [], isLoading: isSubscriptionsLoading } =
-    useQuery<{ service: string; total_amount: number }[]>({
-      queryKey: ["subscriptions", user?.id],
-      queryFn: async () => {
-        if (!user?.id) return [];
-        const { data } = await supabase
-          .from("subscription")
-          .select("*")
-          .eq("user_id", user.id);
-        return data || [];
-      },
-      enabled: !!user?.id,
-    });
+  const {
+    data: subscriptions = [],
+    isLoading: isSubscriptionsLoading,
+    error: subscriptionsError,
+  } = useQuery<{ service: string; total_amount: number }[]>({
+    queryKey: ["subscriptions", user?.id],
+    queryFn: async () => {
+      if (!user?.id) return [];
+      const { data, error } = await supabase
+        .from("subscription")
+        .select("*")
+        .eq("user_id", user.id);
+      if (error) throw error;
+      return data ?? [];
+    },
+    enabled: !!user?.id,
+  });
 
-  const isAllEmpty = !isSubscriptionsLoading && subscriptions.length === 0;
+  const isAllEmpty =
+    !isUserLoading &&
+    !!user?.id &&
+    !isSubscriptionsLoading &&
+    !subscriptionsError &&
+    subscriptions.length === 0;
 
   const subscriptionSummaries = useMemo(
     () =>
