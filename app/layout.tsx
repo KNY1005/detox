@@ -27,7 +27,43 @@ export const metadata: Metadata = {
     default: "Detox",
     template: "%s | Detox",
   },
-  description: "구독 관리 앱",
+  description: "디지털 구독 다이어트 서비스",
+  applicationName: "Detox",
+  keywords: [
+    "Detox",
+    "구독 관리",
+    "구독",
+    "정기결제",
+    "월간 지출",
+    "소비 분석",
+    "구독 통계",
+  ],
+  category: "lifestyle",
+  openGraph: {
+    title: "Detox",
+    description: "디지털 구독 다이어트 서비스",
+    siteName: "Detox",
+    locale: "ko_KR",
+    type: "website",
+    images: [
+      {
+        url: "/images/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Detox",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Detox",
+    description: "디지털 구독 다이어트 서비스",
+    images: ["/images/og-image.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({
