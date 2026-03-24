@@ -32,7 +32,7 @@ export default function MonthExpenseSelector({
           type="button"
           aria-label="이전 달 보기"
           onClick={() => changeMonth(-1)}
-          className="w-11 h-11 flex items-center justify-center text-gray-600"
+          className="w-11 h-11 flex items-center justify-center text-gray-600 cursor-pointer "
         >
           <FontAwesomeIcon icon={faCaretLeft} />
         </button>
@@ -47,7 +47,7 @@ export default function MonthExpenseSelector({
           type="button"
           aria-label="다음 달 보기"
           onClick={() => changeMonth(1)}
-          className="w-11 h-11 flex items-center justify-center text-gray-600"
+          className="w-11 h-11 flex items-center justify-center text-gray-600 cursor-pointer"
         >
           <FontAwesomeIcon icon={faCaretRight} />
         </button>
