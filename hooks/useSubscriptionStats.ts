@@ -1,13 +1,8 @@
-import { createBrowserClient } from "@supabase/ssr";
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useCurrentUserQuery } from "@/query/users";
 import { Database } from "@/types/supabase.types";
-
-const supabase = createBrowserClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+import { supabase } from "@/lib/supabase";
 
 type SubscriptionRow = Database["public"]["Tables"]["subscription"]["Row"];
 
@@ -19,10 +14,11 @@ export function useSubscriptionStats() {
       queryKey: ["subscriptions", user?.id],
       queryFn: async () => {
         if (!user?.id) return [];
-        const { data } = await supabase
+        const { data, error } = await supabase
           .from("subscription")
           .select("*")
           .eq("user_id", user.id);
+        if (error) throw error;
         return data || [];
       },
       enabled: !!user?.id,

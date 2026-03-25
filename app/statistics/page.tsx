@@ -100,7 +100,7 @@ function ServiceComparisonSection({
     <div className="mt-10">
       <ComparisonInsight
         isLoading={isLoading}
-        title={`${current.service} 유저 평균 소비와 비교`}
+        title={`${current.service ?? "서비스"} 유저 평균 소비와 비교`}
         diffAmount={subDiff}
         status={subStatus}
       />
@@ -120,7 +120,7 @@ function ServiceComparisonSection({
         <ComparisonChart
           userName={current.service ?? ""}
           userAmount={current.amount}
-          compareName={`${current.service} 평균 소비`}
+          compareName={`${current.service ?? "서비스"} 평균 소비`}
           compareAmount={serviceAvg}
           isLoading={isLoading}
         />
