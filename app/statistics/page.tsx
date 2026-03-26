@@ -182,10 +182,11 @@ export default function StatisticsPage() {
   const isAllEmpty =
     isUserResolved && !isSubscriptionsLoading && subscriptions.length === 0;
   const isMonthlyEmpty =
-    +isUserResolved &&
-    +!isSubscriptionsLoading &&
-    +!isAllEmpty &&
-    +monthlyTotalAmount === 0;
+    isUserResolved &&
+    !isSubscriptionsLoading &&
+    !isAllEmpty &&
+    monthlyTotalAmount === 0;
+
   const displayAmount = isAllEmpty || isMonthlyEmpty ? 0 : monthlyTotalAmount;
 
   return (
