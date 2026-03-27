@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import FloatingButton from "@/app/components/floating-button";
+import TopFloatingButton from "@/app/components/floating-button/top-floating-button";
 import { useTopFloatingButtonVisible } from "@/app/hooks/use-top-floating-button-visible";
 
 const TOP_BUTTON_VISIBLE_PATHS = new Set([
@@ -25,7 +25,7 @@ export default function GlobalTopFloatingButton() {
       }`}
       aria-hidden={!isVisible}
     >
-      <FloatingButton variant="top" />
+      <TopFloatingButton />
     </div>
   );
 }

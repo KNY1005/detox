@@ -16,6 +16,7 @@ import {
   updateUserProfile,
   upsertUser,
 } from "@/services/users";
+import { communityKeys } from "@/query/community";
 
 export const usersKeys = {
   all: ["users"],
@@ -169,6 +170,11 @@ export function useUpdateUserProfileMutation(userId: string) {
       if (data) {
         queryClient.setQueryData(usersKeys.profileById(userId), data);
       }
+
+      void queryClient.invalidateQueries({
+        queryKey: communityKeys.all,
+        refetchType: "all",
+      });
     },
   });
 }

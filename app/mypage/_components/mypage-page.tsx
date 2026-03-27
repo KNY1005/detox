@@ -2,7 +2,7 @@
 
 import { useSupabase } from "@/hooks/useSupabase";
 import { useRouter } from "next/navigation";
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useState } from "react";
 import MypageContent from "./mypage-content";
 import MypageSkeleton from "./mypage-skeleton";
 
@@ -10,12 +10,13 @@ export default function MypagePage() {
   const router = useRouter();
   const { session, loading } = useSupabase();
   const userId = session?.user?.id;
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   useEffect(() => {
-    if (!loading && !session) {
+    if (!loading && !session && !isLoggingOut) {
       router.replace("/login");
     }
-  }, [session, loading, router]);
+  }, [session, loading, isLoggingOut, router]);
 
   if (loading || !session) {
     return <MypageSkeleton />;
@@ -27,7 +28,10 @@ export default function MypagePage() {
 
   return (
     <Suspense fallback={<MypageSkeleton />}>
-      <MypageContent userId={userId} />
+      <MypageContent
+        userId={userId}
+        onLogoutStateChange={setIsLoggingOut}
+      />
     </Suspense>
   );
 }

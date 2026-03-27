@@ -48,7 +48,7 @@ export default function CommunityEditFormContent({
       });
 
       success("게시글을 수정했어요.");
-      router.replace(`/community/${postId}`);
+      router.back();
     } catch (updatePostError) {
       console.error(updatePostError);
       error("게시글 수정에 실패했어요.");
@@ -63,7 +63,7 @@ export default function CommunityEditFormContent({
         includeAll={false}
       />
 
-      <main className="px-6">
+      <main className="px-6 mt-10">
         <CommunityForm
           title={title}
           content={content}

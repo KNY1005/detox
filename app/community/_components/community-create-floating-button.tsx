@@ -1,6 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import FloatingButton from "@/app/components/floating-button";
 
 export default function CommunityCreateFloatingButton() {
@@ -11,5 +13,13 @@ export default function CommunityCreateFloatingButton() {
     router.push(createPath);
   };
 
-  return <FloatingButton variant="create" onClick={handleCreateClick} />;
+  return (
+    <FloatingButton
+      ariaLabel="게시글 작성하기"
+      onClick={handleCreateClick}
+      className="btn-primary"
+    >
+      <FontAwesomeIcon icon={faPlus} aria-hidden="true" />
+    </FloatingButton>
+  );
 }

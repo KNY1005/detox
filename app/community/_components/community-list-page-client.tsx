@@ -3,7 +3,7 @@
 import { Suspense, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
-import FloatingButton from "@/app/components/floating-button";
+import TopFloatingButton from "@/app/components/floating-button/top-floating-button";
 import FeedbackState from "@/app/components/feedback-state";
 import Header from "@/app/components/header";
 import BottomNav from "@/app/components/bottom-nav";
@@ -142,8 +142,8 @@ export default function CommunityListPageClient({
           </QueryErrorResetBoundary>
         </section>
 
-        <div className="fixed right-0 bottom-24 z-10">
-          <div className="relative">
+        <div className="fixed bottom-24 left-1/2 z-10 w-full max-w-(--max-width) -translate-x-1/2">
+          <div className="relative flex justify-end">
             <div
               className={`absolute right-0 transition-opacity duration-200 ease-out ${
                 showCreateFloatingButton
@@ -156,7 +156,7 @@ export default function CommunityListPageClient({
               }`}
               aria-hidden={!showTopFloatingButton}
             >
-              <FloatingButton variant="top" />
+              <TopFloatingButton />
             </div>
             {showCreateFloatingButton ? (
               <CommunityCreateFloatingButton />

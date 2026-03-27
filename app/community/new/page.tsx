@@ -69,7 +69,7 @@ function CommunityNewPageContent() {
         content: content.trim(),
       });
 
-      router.push(`/community/${createdPost.id}`);
+      router.replace(`/community/${createdPost.id}`);
     } catch (createPostError) {
       console.error(createPostError);
       error("게시글 작성에 실패했어요.");

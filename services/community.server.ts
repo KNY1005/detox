@@ -13,7 +13,7 @@ import type { Tables } from "@/types/supabase.types";
 type UserPreview = Pick<Tables<"users">, "id" | "nickname" | "profile_image">;
 
 type PostWithCounts = Tables<"post"> & {
-  comment: { count: number }[];
+  active_comments: { count: number }[];
   likes: { count: number }[];
 };
 
@@ -32,11 +32,12 @@ export async function getServerCommunityListPage(params: {
     .select(
       `
       *,
-      comment(count),
+      active_comments:comment(count),
       likes(count)
     `
     )
-    .is("deleted_at", null);
+    .is("deleted_at", null)
+    .is("active_comments.deleted_at", null);
 
   if (params.service) {
     query = query.eq("service", params.service);
@@ -69,7 +70,6 @@ export async function getServerCommunityListPage(params: {
   const hasNextPage = posts.length > pageSize;
   const visiblePosts = hasNextPage ? posts.slice(0, pageSize) : posts;
   const userIds = [...new Set(visiblePosts.map((post) => post.user_id))];
-
   const { data: users, error: usersError } = await supabase
     .from("users")
     .select(USER_PREVIEW_SELECT)
@@ -95,7 +95,7 @@ export async function getServerCommunityListPage(params: {
       title: post.title,
       content: post.content,
       likeCount: post.likes?.[0]?.count ?? 0,
-      commentCount: post.comment?.[0]?.count ?? 0,
+      commentCount: post.active_comments?.[0]?.count ?? 0,
       thumbUrl: user?.profile_image ?? "/images/default-user.png",
     };
   });
