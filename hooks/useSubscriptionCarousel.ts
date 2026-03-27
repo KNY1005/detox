@@ -31,6 +31,7 @@ export function useSubscriptionCarousel(
 
   return {
     current,
+    currentIndex,
     serviceAvg,
     subDiff,
     subStatus,

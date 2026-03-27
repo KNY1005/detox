@@ -40,6 +40,7 @@ export function useAgeBandComparison(displayAmount: number) {
     setAgeBandIndex((prev) => (prev === AGE_BANDS.length - 1 ? 0 : prev + 1));
 
   return {
+    ageBandIndex,
     ageBand,
     ageBandLabel,
     ageAverage,
