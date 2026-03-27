@@ -11,6 +11,7 @@ import ServiceComparisonSection from "./_components/service-comparison-section";
 import EmptyAnalysis from "./_components/empty-analysis";
 import EmptySubscriptionOverlay from "./_components/empty-subscription-overlay";
 import AnalysisSummary from "./_components/analysis-summary/analysis-summary";
+import ErrorScreen from "@/app/components/error-screen/error-screen";
 
 import { calculateMonthlyTotal } from "@/app/utils/subscriptions/calculate";
 import { useCurrentUserQuery, useUserProfileQuery } from "@/query/users";
@@ -37,6 +38,7 @@ export default function StatisticsPage() {
     serviceAvgMap,
     isSubscriptionsLoading,
     isServiceAvgLoading,
+    isError,
   } = useSubscriptionStats();
 
   // 분석 데이터
@@ -73,6 +75,13 @@ export default function StatisticsPage() {
             />
 
             <div className="relative flex-1 w-full">
+              {isError && (
+                <ErrorScreen
+                  error={new Error("데이터를 불러오는 중 문제가 발생했어요.")}
+                  reset={() => window.location.reload()}
+                />
+              )}
+
               {!isAllEmpty && !isMonthlyEmpty && (
                 <div className="w-full animate-in fade-in duration-500">
                   <AgeBandSection
