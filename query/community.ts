@@ -18,6 +18,10 @@ import type {
 } from "@/app/community/_types";
 import type { SubscriptableBrandType } from "@/app/utils/brand/type";
 import {
+  communityKeys,
+  createCommunityListInfiniteQueryOptions,
+} from "@/query/community-options";
+import {
   createCommunityComment,
   createCommunityPost,
   deleteCommunityComment,
@@ -32,34 +36,7 @@ import {
   toggleCommunityPostLike,
   updateCommunityPost,
 } from "@/services/community";
-
-export const communityKeys = {
-  all: ["community"],
-  lists: () => [...communityKeys.all, "list"],
-  list: (service?: SubscriptableBrandType) => [
-    ...communityKeys.lists(),
-    service ?? "all",
-  ],
-  details: () => [...communityKeys.all, "detail"],
-  detail: (postId: string) => [...communityKeys.details(), postId],
-  recommendations: () => [...communityKeys.all, "recommendation"],
-  recommendationList: (postId: string) => [
-    ...communityKeys.recommendations(),
-    postId,
-  ],
-  recommendedPosts: (postId: string, service?: SubscriptableBrandType) => [
-    ...communityKeys.recommendationList(postId),
-    service ?? "all",
-  ],
-  comments: () => [...communityKeys.all, "comment"],
-  commentList: (postId: string) => [...communityKeys.comments(), postId],
-  likes: () => [...communityKeys.all, "like"],
-  likeStatuses: (postId: string) => [...communityKeys.likes(), postId],
-  likeStatus: (postId: string, userId?: string) => [
-    ...communityKeys.likeStatuses(postId),
-    userId ?? "guest",
-  ],
-} as const;
+export { communityKeys } from "@/query/community-options";
 
 //좋아요 낙관적 업데이트 롤백용
 type CommunityLikeMutationContext = {
@@ -198,50 +175,25 @@ async function invalidateCommunityPostLikes(
 
 //리스트
 export function useInfiniteCommunityListQuery(
-  service?: SubscriptableBrandType,
-  initialPage?: CommunityListPage
+  service?: SubscriptableBrandType
 ) {
-  return useInfiniteQuery({
-    queryKey: communityKeys.list(service),
-    initialPageParam: null as CommunityListCursor | null,
-    queryFn: ({ pageParam }) =>
-      getCommunityListPage({
-        service,
-        cursor: pageParam,
-      }),
-    getNextPageParam: (lastPage) => lastPage.nextCursor,
-
-    initialData: initialPage
-      ? {
-          pages: [initialPage],
-          pageParams: [null],
-        }
-      : undefined,
-    refetchOnMount: false,
-  });
+  return useInfiniteQuery(
+    createCommunityListInfiniteQueryOptions({
+      service,
+      fetchPage: getCommunityListPage,
+    })
+  );
 }
 
 export function useSuspenseInfiniteCommunityListQuery(
-  service?: SubscriptableBrandType,
-  initialPage?: CommunityListPage
+  service?: SubscriptableBrandType
 ) {
-  return useSuspenseInfiniteQuery({
-    queryKey: communityKeys.list(service),
-    initialPageParam: null as CommunityListCursor | null,
-    queryFn: ({ pageParam }) =>
-      getCommunityListPage({
-        service,
-        cursor: pageParam,
-      }),
-    getNextPageParam: (lastPage) => lastPage.nextCursor,
-    initialData: initialPage
-      ? {
-          pages: [initialPage],
-          pageParams: [null],
-        }
-      : undefined,
-    refetchOnMount: false,
-  });
+  return useSuspenseInfiniteQuery(
+    createCommunityListInfiniteQueryOptions({
+      service,
+      fetchPage: getCommunityListPage,
+    })
+  );
 }
 
 //상세
@@ -254,7 +206,6 @@ export function useCommunityDetailQuery(
     queryFn: () => getCommunityDetail(postId),
     enabled: Boolean(postId),
     initialData: initialPost,
-    refetchOnMount: false,
   });
 }
 
@@ -273,7 +224,6 @@ export function useRecommendedCommunityPostsQuery(
       }),
     enabled: Boolean(postId && service),
     initialData: initialRecommendedPosts,
-    refetchOnMount: false,
   });
 }
 
@@ -342,7 +292,6 @@ export function useCommunityCommentsQuery(
     queryFn: () => getCommunityComments(postId),
     enabled: Boolean(postId),
     initialData: initialComments,
-    refetchOnMount: false,
   });
 }
 

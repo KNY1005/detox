@@ -68,14 +68,7 @@ export default function NotificationsContent({ userId }: Props) {
             aria-label="알림 설정으로 이동"
           >
             <span className="inline-flex items-center justify-center w-[28px] h-[28px] overflow-hidden shrink-0">
-              <FontAwesomeIcon
-                icon={faGear}
-                className="text-gray-400"
-                style={{
-                  transform: "scale(0.8)",
-                  transformOrigin: "center",
-                }}
-              />
+              <FontAwesomeIcon icon={faGear} className="text-gray-300" />
             </span>
           </button>
         }

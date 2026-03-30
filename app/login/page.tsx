@@ -16,6 +16,7 @@ import { useAnonymousLoginMutation, useCurrentUserQuery } from "@/query/users";
 import { useToast } from "../hooks/useToast";
 import { getSafeRedirectPath } from "@/app/utils/auth/get-safe-redirect-path";
 import { signInWithOAuth } from "@/services/users";
+import Link from "next/link";
 
 function LoginContent() {
   const router = useRouter();
@@ -78,7 +79,9 @@ function LoginContent() {
             디지털 구독 다이어트{" "}
             <span className="text-brand-primary">디톡스</span>
           </p>
-          <Image src="/images/logo.png" alt="logo" width={200} height={55} />
+          <Link href="/">
+            <Image src="/images/logo.png" alt="logo" width={200} height={55} />
+          </Link>
         </header>
 
         <div className="w-full px-6 flex flex-col gap-4">

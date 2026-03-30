@@ -130,7 +130,7 @@ export default function CommunityDetailCommentSection({
             type="button"
             aria-label="로그인 후 댓글 작성"
             onClick={handleCommentLoginClick}
-            className="flex-1 bg-transparent text-left text-base text-gray-300 outline-none"
+            className="flex-1 bg-transparent text-left text-base text-gray-300 outline-none  cursor-pointer"
           >
             댓글 작성은 로그인 후 가능해요
           </button>

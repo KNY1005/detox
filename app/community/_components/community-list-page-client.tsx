@@ -1,9 +1,8 @@
 "use client";
 
-import { Suspense, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { startTransition, Suspense, useEffect, useRef, useState } from "react";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
-import FloatingButton from "@/app/components/floating-button";
+import TopFloatingButton from "@/app/components/floating-button/top-floating-button";
 import FeedbackState from "@/app/components/feedback-state";
 import Header from "@/app/components/header";
 import BottomNav from "@/app/components/bottom-nav";
@@ -13,28 +12,23 @@ import CommunityCreateFloatingButton from "./community-create-floating-button";
 import CommunityList from "./community-list";
 import CommunityListErrorBoundary from "./community-list-error-boundary";
 import CommunityPostListSkeleton from "./community-post-list-skeleton";
-import type { CommunityListPage, CommunityServiceFilter } from "../_types";
+import type { CommunityServiceFilter } from "../_types";
 import { useSuspenseInfiniteCommunityListQuery } from "@/query/community";
 import { useCurrentUserQuery } from "@/query/users";
 
 interface CommunityListPageClientProps {
   initialService: CommunityServiceFilter;
-  initialPage: CommunityListPage;
-}
-
-interface CommunityListContentProps {
-  initialService: CommunityServiceFilter;
-  initialPage: CommunityListPage;
 }
 
 function CommunityListContent({
-  initialService,
-  initialPage,
-}: CommunityListContentProps) {
+  service,
+}: {
+  service: CommunityServiceFilter;
+}) {
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
-  const queryService = initialService === "all" ? undefined : initialService;
+  const queryService = service === "all" ? undefined : service;
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage } =
-    useSuspenseInfiniteCommunityListQuery(queryService, initialPage);
+    useSuspenseInfiniteCommunityListQuery(queryService);
 
   const items = data?.pages.flatMap((page) => page.items) ?? [];
 
@@ -68,7 +62,7 @@ function CommunityListContent({
   const renderEmpty = () => (
     <FeedbackState
       description={
-        initialService === "all"
+        service === "all"
           ? "아직 등록된 게시글이 없어요."
           : "선택한 서비스의 게시글이 아직 없어요."
       }
@@ -92,28 +86,60 @@ function CommunityListContent({
   );
 }
 
-export default function CommunityListPageClient({
-  initialService,
-  initialPage,
-}: CommunityListPageClientProps) {
-  const router = useRouter();
+function CommunityFloatingActions() {
   const showTopFloatingButton = useTopFloatingButtonVisible();
   const {
     data: currentUser,
     isPending: isCurrentUserPending,
     isError: isCurrentUserError,
   } = useCurrentUserQuery();
-  const resetKey = `${initialService}:${initialPage.items.length}`;
   const showCreateFloatingButton =
     !isCurrentUserPending && !isCurrentUserError && Boolean(currentUser?.id);
 
-  const handleChangeService = (nextService: CommunityServiceFilter) => {
-    const nextUrl =
-      nextService === "all"
-        ? "/community"
-        : `/community?service=${nextService}`;
+  return (
+    <div className="fixed bottom-24 left-1/2 z-10 w-full max-w-(--max-width) -translate-x-1/2">
+      <div className="relative flex justify-end">
+        <div
+          className={`absolute right-0 transition-opacity duration-200 ease-out ${
+            showCreateFloatingButton
+              ? "bottom-[calc(100%+0.75rem)]"
+              : "bottom-0"
+          } ${
+            showTopFloatingButton
+              ? "visible opacity-100"
+              : "pointer-events-none invisible opacity-0"
+          }`}
+          aria-hidden={!showTopFloatingButton}
+        >
+          <TopFloatingButton />
+        </div>
+        {showCreateFloatingButton ? <CommunityCreateFloatingButton /> : null}
+      </div>
+    </div>
+  );
+}
 
-    router.replace(nextUrl);
+export default function CommunityListPageClient({
+  initialService,
+}: CommunityListPageClientProps) {
+  const [selectedService, setSelectedService] =
+    useState<CommunityServiceFilter>(initialService);
+  const resetKey = selectedService;
+
+  const syncServiceToUrl = (service: CommunityServiceFilter) => {
+    const nextUrl =
+      service === "all" ? "/community" : `/community?service=${service}`;
+
+    window.history.replaceState(null, "", nextUrl);
+  };
+
+  const handleChangeService = (nextService: CommunityServiceFilter) => {
+    if (nextService === selectedService) {
+      return;
+    }
+
+    setSelectedService(nextService);
+    syncServiceToUrl(nextService);
   };
 
   return (
@@ -121,7 +147,7 @@ export default function CommunityListPageClient({
       <Header variant="text" leftText="커뮤니티" hasNotification />
 
       <main>
-        <BrandTabs value={initialService} onChange={handleChangeService} />
+        <BrandTabs value={selectedService} onChange={handleChangeService} />
 
         <section className="px-6">
           <QueryErrorResetBoundary>
@@ -132,37 +158,14 @@ export default function CommunityListPageClient({
                     <CommunityPostListSkeleton count={4} className="pt-6" />
                   }
                 >
-                  <CommunityListContent
-                    initialService={initialService}
-                    initialPage={initialPage}
-                  />
+                  <CommunityListContent service={selectedService} />
                 </Suspense>
               </CommunityListErrorBoundary>
             )}
           </QueryErrorResetBoundary>
         </section>
 
-        <div className="fixed right-0 bottom-24 z-10">
-          <div className="relative">
-            <div
-              className={`absolute right-0 transition-opacity duration-200 ease-out ${
-                showCreateFloatingButton
-                  ? "bottom-[calc(100%+0.75rem)]"
-                  : "bottom-0"
-              } ${
-                showTopFloatingButton
-                  ? "visible opacity-100"
-                  : "pointer-events-none invisible opacity-0"
-              }`}
-              aria-hidden={!showTopFloatingButton}
-            >
-              <FloatingButton variant="top" />
-            </div>
-            {showCreateFloatingButton ? (
-              <CommunityCreateFloatingButton />
-            ) : null}
-          </div>
-        </div>
+        <CommunityFloatingActions />
       </main>
 
       <BottomNav />
