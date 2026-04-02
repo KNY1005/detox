@@ -6,8 +6,11 @@ import UserBubble from "@/app/statistics/ai/_components/user-bubble";
 import AIBubble from "@/app/statistics/ai/_components/ai-bubble";
 import QuickQuestions from "@/app/statistics/ai/_components/quick-questions";
 import { useAiChat } from "@/hooks/useAiChat";
+import { useAIStreaming } from "@/hooks/useAIStreaming";
 
 export default function AIChat() {
+  const { streamedResult, isStreaming, startStreaming } = useAIStreaming();
+
   const {
     aiStatus,
     messages,
