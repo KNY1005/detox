@@ -12,6 +12,7 @@ import EmptyAnalysis from "./_components/empty-analysis";
 import EmptySubscriptionOverlay from "./_components/empty-subscription-overlay";
 import AnalysisSummary from "./_components/analysis-summary/analysis-summary";
 import ErrorScreen from "@/app/components/error-screen/error-screen";
+import { useAIStreaming } from "@/hooks/useAIStreaming";
 
 import { calculateMonthlyTotal } from "@/app/utils/subscriptions/calculate";
 import { useCurrentUserQuery, useUserProfileQuery } from "@/query/users";
@@ -23,13 +24,15 @@ export default function StatisticsPage() {
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   // 유저 정보
-  const { data: user } = useCurrentUserQuery();
-  const isUserResolved = user !== undefined;
-  const { data: profile } = useUserProfileQuery(user?.id);
-  const metadata = user?.user_metadata as
-    | Record<string, string | undefined>
-    | undefined;
-  const userName = metadata?.nickname || profile?.nickname || "사용자";
+  const { data: user, isLoading: isUserLoading } = useCurrentUserQuery();
+  const { data: profile, isLoading: isProfileLoading } = useUserProfileQuery(
+    user?.id
+  );
+  const rawNickname = profile?.nickname || user?.user_metadata?.nickname;
+  const userName =
+    isUserLoading || isProfileLoading ? "" : rawNickname || "사용자";
+
+  const isUserResolved = user !== undefined && !isUserLoading;
 
   // 구독 데이터
   const {
