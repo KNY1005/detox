@@ -40,7 +40,6 @@ export default function AIBubble({
 }: AIBubbleProps) {
   return (
     <div className="flex flex-col mb-6 px-6 animate-in fade-in">
-      {/* 1. AI 프로필 영역 */}
       <div className="flex items-center mb-2">
         <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center mr-2 overflow-hidden">
           <Image
@@ -54,7 +53,6 @@ export default function AIBubble({
         <span className="font-bold body-lg text-gray-300">AI디톡이</span>
       </div>
 
-      {/* 2. 말풍선 영역 */}
       <div className="flex flex-col items-start max-w-[80%]">
         <div className="bg-white border border-gray-100 rounded-tl-none px-4 py-3 rounded-lg w-full shadow-sm">
           {status === "analyzing" ? (
@@ -69,7 +67,7 @@ export default function AIBubble({
               {content && (
                 <p className="mt-2 text-gray-600 body-md whitespace-pre-wrap border-l-2 border-brand-primary/20 pl-3 animate-in slide-in-from-top-1">
                   {content}
-                  {/* 커서 효과 */}
+
                   <span className="inline-block w-1.5 h-4 ml-1 bg-brand-primary animate-bounce align-middle">
                     |
                   </span>
@@ -77,18 +75,16 @@ export default function AIBubble({
               )}
             </div>
           ) : status === "error" ? (
-            /* 2순위: 에러 상태 */
             <p className="body-lg text-red-500 font-medium">
               분석에 실패했어요. 다시 시도해주세요.
             </p>
           ) : analysisData?.payload?.analysis_items ? (
-            /* 3순위: 분석이 완료되어 정형화된 데이터가 있을 때 */
             <div className="mt-1 flex flex-col gap-4">
               <div className="py-2 border-b border-gray-50">
                 <p className="title-sm text-brand-primary font-bold">
                   {analysisData.title}
                 </p>
-                {/* 분석 요약 문구 */}
+
                 {content && (
                   <p className="body-sm text-gray-400 whitespace-pre-line mt-1">
                     {content}
@@ -96,7 +92,6 @@ export default function AIBubble({
                 )}
               </div>
 
-              {/* 항목별 AI Insight 카드 */}
               {analysisData.payload.analysis_items.map((item, idx) => (
                 <div
                   key={idx}
@@ -116,14 +111,12 @@ export default function AIBubble({
                 </div>
               ))}
 
-              {/* 비교 요약 메시지 */}
               {analysisData.payload.diff_message && (
                 <div className="bg-brand-primary/5 p-3 rounded-lg text-center mt-1 font-bold text-brand-primary text-xs">
                   💡 {analysisData.payload.diff_message}
                 </div>
               )}
 
-              {/* 4. 3개월 구독 소비 추세(차트) */}
               {analysisData.payload.chart_data?.length ? (
                 <div className="mt-4">
                   <div className="mb-2 font-bold text-gray-700">
@@ -144,7 +137,6 @@ export default function AIBubble({
                 </div>
               )}
 
-              {/* 5. 절감 제안 요약 */}
               <div className="mt-4 border border-brand-primary/20 rounded-lg bg-brand-primary/5 p-3 text-brand-primary text-sm">
                 {analysisData.payload.analysis_items.length
                   ? "여기서 바로 실행할 수 있는 핵심 절감 제안: 현재 유지 + 1~2개 중복대체 서비스 결합을 추천합니다."
@@ -152,7 +144,6 @@ export default function AIBubble({
               </div>
             </div>
           ) : (
-            /* 4순위: 일반 텍스트 모드 (스트리밍도 아니고 결과 데이터도 없을 때) */
             content && (
               <p className="body-lg whitespace-pre-wrap text-gray-700">
                 {content}
@@ -161,7 +152,6 @@ export default function AIBubble({
           )}
         </div>
 
-        {/* 3. 시간 표시 (로딩 중이 아닐 때만 노출) */}
         {status !== "analyzing" && time && (
           <span className="label-lg text-gray-300 mt-1.5 ml-1">{time}</span>
         )}
