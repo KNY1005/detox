@@ -108,6 +108,11 @@
   }
   body {
     line-height: 1;
+    scrollbar-gutter: stable;
+  }
+
+  body::-webkit-scrollbar {
+    display: none;
   }
   ol,
   ul {

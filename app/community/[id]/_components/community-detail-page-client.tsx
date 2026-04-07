@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import FeedbackPage from "@/app/components/feedback-page";
 import Header from "@/app/components/header";
 import {
   useCommunityCommentsQuery,
@@ -41,9 +42,20 @@ export default function CommunityDetailPageClient({
     initialRecommendedPosts
   );
 
-  const post = detailQuery.data ?? initialPost;
+  const post = detailQuery.data === undefined ? initialPost : detailQuery.data;
   const comments = commentsQuery.data ?? [];
   const recommendedPosts = recommendedPostsQuery.data ?? [];
+
+  if (post === null) {
+    return (
+      <FeedbackPage
+        title="게시글을 찾을 수 없어요."
+        description="삭제되었거나 더 이상 볼 수 없는 게시글이에요."
+        buttonLabel="커뮤니티로 가기"
+        buttonHref="/community"
+      />
+    );
+  }
 
   return (
     <>

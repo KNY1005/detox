@@ -6,6 +6,28 @@ import KebabMenu from "@/app/components/kebabmenu";
 import { useToast } from "@/app/hooks/useToast";
 import type { AlertItem } from "@/store/useAlertStore";
 
+type ErrorWithMessage = {
+  message?: string | null;
+};
+
+function getErrorMessage(error: unknown, fallbackMessage: string) {
+  if (error instanceof Error && error.message) {
+    return error.message;
+  }
+
+  if (
+    typeof error === "object" &&
+    error !== null &&
+    "message" in error &&
+    typeof (error as ErrorWithMessage).message === "string" &&
+    (error as ErrorWithMessage).message
+  ) {
+    return (error as ErrorWithMessage).message as string;
+  }
+
+  return fallbackMessage;
+}
+
 interface DetailKebabProps {
   variant?: "default" | "edit";
   entityName?: string;
@@ -39,7 +61,7 @@ export default function DetailKebab({
         success(`${entityName}이 삭제되었습니다.`);
       } catch (error) {
         console.error(error);
-        errorToast(`${entityName} 삭제에 실패했어요.`);
+        errorToast(getErrorMessage(error, `${entityName} 삭제에 실패했어요.`));
       }
     },
   };
@@ -51,7 +73,7 @@ export default function DetailKebab({
       warning(`${entityName}이 신고되었습니다.`);
     } catch (error) {
       console.error(error);
-      errorToast(`${entityName} 신고에 실패했어요.`);
+      errorToast(getErrorMessage(error, `${entityName} 신고에 실패했어요.`));
     }
   };
 

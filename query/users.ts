@@ -16,7 +16,7 @@ import {
   updateUserProfile,
   upsertUser,
 } from "@/services/users";
-import { communityKeys } from "@/query/community";
+import { communityKeys } from "@/query/community-options";
 
 export const usersKeys = {
   all: ["users"],

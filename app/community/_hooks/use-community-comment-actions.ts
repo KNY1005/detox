@@ -37,6 +37,7 @@ export function useCommunityCommentActions() {
     return async () => {
       await reportCommunityComment({
         commentId: item.id,
+        postId: item.postId,
         reporterUserId: currentUserId,
       });
     };

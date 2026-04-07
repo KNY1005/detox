@@ -37,6 +37,8 @@ export async function getServerCommunityListPage(params: {
     `
     )
     .is("deleted_at", null)
+    .is("hidden_at", null)
+    .is("active_comments.hidden_at", null)
     .is("active_comments.deleted_at", null);
 
   if (params.service) {
@@ -124,6 +126,7 @@ export async function getServerCommunityDetail(
     .select("*")
     .eq("id", postId)
     .is("deleted_at", null)
+    .is("hidden_at", null)
     .maybeSingle();
 
   if (postError) {
@@ -149,6 +152,7 @@ export async function getServerCommunityDetail(
       .from("comment")
       .select("id", { count: "exact", head: true })
       .eq("post_id", post.id)
+      .is("hidden_at", null)
       .is("deleted_at", null),
     supabase
       .from("likes")
@@ -224,6 +228,7 @@ export async function getServerCommunityComments(
     .select("*")
     .eq("post_id", postId)
     .is("deleted_at", null)
+    .is("hidden_at", null)
     .order("created_at", { ascending: true });
 
   if (commentsError) {

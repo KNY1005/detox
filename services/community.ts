@@ -18,6 +18,83 @@ type PostWithCounts = Tables<"post"> & {
 };
 
 const USER_PREVIEW_SELECT = "id, nickname, profile_image";
+const REPORT_DEFAULT_REASON = "other";
+const DUPLICATE_KEY_ERROR_CODE = "23505";
+
+type SupabaseErrorLike = {
+  code?: string | null;
+  message?: string | null;
+  details?: string | null;
+  hint?: string | null;
+};
+
+const getSafeString = (value: unknown) =>
+  typeof value === "string" ? value : "";
+
+function isDuplicateReportError(error: unknown) {
+  if (typeof error !== "object" || error === null) {
+    return false;
+  }
+
+  const typedError = error as SupabaseErrorLike;
+  const errorMessage = [
+    getSafeString(typedError.message),
+    getSafeString(typedError.details),
+    getSafeString(typedError.hint),
+  ]
+    .join(" ")
+    .toLowerCase();
+
+  return (
+    typedError.code === DUPLICATE_KEY_ERROR_CODE ||
+    errorMessage.includes("duplicate key")
+  );
+}
+
+async function ensurePostCanBeReported(postId: string, reporterUserId: string) {
+  const { data, error } = await supabase
+    .from("post")
+    .select("id, user_id")
+    .eq("id", postId)
+    .is("deleted_at", null)
+    .maybeSingle();
+
+  if (error) {
+    throw error;
+  }
+
+  if (!data) {
+    throw new Error("이미 삭제되었거나 없는 게시글입니다.");
+  }
+
+  if (data.user_id === reporterUserId) {
+    throw new Error("본인 게시글은 신고할 수 없어요.");
+  }
+}
+
+async function ensureCommentCanBeReported(
+  commentId: string,
+  reporterUserId: string
+) {
+  const { data, error } = await supabase
+    .from("comment")
+    .select("id, user_id")
+    .eq("id", commentId)
+    .is("deleted_at", null)
+    .maybeSingle();
+
+  if (error) {
+    throw error;
+  }
+
+  if (!data) {
+    throw new Error("이미 삭제되었거나 없는 댓글입니다.");
+  }
+
+  if (data.user_id === reporterUserId) {
+    throw new Error("본인 댓글은 신고할 수 없어요.");
+  }
+}
 
 //게시글리스트
 export async function getCommunityListPage(params: {
@@ -37,6 +114,8 @@ export async function getCommunityListPage(params: {
   `
     )
     .is("deleted_at", null)
+    .is("hidden_at", null)
+    .is("active_comments.hidden_at", null)
     .is("active_comments.deleted_at", null);
 
   if (params.service) {
@@ -121,6 +200,7 @@ export async function getCommunityDetail(
     .select("*")
     .eq("id", postId)
     .is("deleted_at", null)
+    .is("hidden_at", null)
     .maybeSingle();
 
   if (postError) {
@@ -146,6 +226,7 @@ export async function getCommunityDetail(
       .from("comment")
       .select("id", { count: "exact", head: true })
       .eq("post_id", post.id)
+      .is("hidden_at", null)
       .is("deleted_at", null),
     supabase
       .from("likes")
@@ -293,16 +374,26 @@ export async function reportCommunityPost(params: {
   postId: string;
   reporterUserId: string;
 }) {
+  await ensurePostCanBeReported(params.postId, params.reporterUserId);
+
   const { data, error } = await supabase
     .from("report")
     .insert({
+      detail: null,
       post_id: params.postId,
+      reason: REPORT_DEFAULT_REASON,
       reporter_user_id: params.reporterUserId,
     })
     .select("id")
     .maybeSingle();
 
-  if (error) throw error;
+  if (error) {
+    if (isDuplicateReportError(error)) {
+      throw new Error("이미 신고한 게시글입니다.");
+    }
+
+    throw error;
+  }
   if (!data) {
     throw new Error("게시글 신고에 실패했어요.");
   }
@@ -319,6 +410,7 @@ export async function getCommunityComments(
     .select("*")
     .eq("post_id", postId)
     .is("deleted_at", null)
+    .is("hidden_at", null)
     .order("created_at", { ascending: true });
 
   if (commentsError) {
@@ -403,18 +495,29 @@ export async function deleteCommunityComment(params: {
 //댓글신고
 export async function reportCommunityComment(params: {
   commentId: string;
+  postId?: string;
   reporterUserId: string;
 }) {
+  await ensureCommentCanBeReported(params.commentId, params.reporterUserId);
+
   const { data, error } = await supabase
     .from("report")
     .insert({
       comment_id: params.commentId,
+      detail: null,
+      reason: REPORT_DEFAULT_REASON,
       reporter_user_id: params.reporterUserId,
     })
     .select("id")
     .maybeSingle();
 
-  if (error) throw error;
+  if (error) {
+    if (isDuplicateReportError(error)) {
+      throw new Error("이미 신고한 댓글입니다.");
+    }
+
+    throw error;
+  }
   if (!data) {
     throw new Error("댓글 신고에 실패했어요.");
   }

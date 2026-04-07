@@ -454,14 +454,28 @@ export function useDeleteCommunityCommentMutation() {
 
 //게시글신고
 export function useReportCommunityPostMutation() {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: reportCommunityPost,
+    onSuccess: async (_, variables) => {
+      await invalidateCommunityPost(queryClient, variables.postId);
+    },
   });
 }
 
 //댓글신고
 export function useReportCommunityCommentMutation() {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: reportCommunityComment,
+    onSuccess: async (_, variables) => {
+      if (!variables.postId) {
+        return;
+      }
+
+      await invalidateCommunityPostComments(queryClient, variables.postId);
+    },
   });
 }

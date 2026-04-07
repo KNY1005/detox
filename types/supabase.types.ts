@@ -57,6 +57,7 @@ export type Database = {
           content: string;
           created_at: string;
           deleted_at: string | null;
+          hidden_at: string | null;
           id: string;
           post_id: string;
           updated_at: string;
@@ -66,6 +67,7 @@ export type Database = {
           content: string;
           created_at?: string;
           deleted_at?: string | null;
+          hidden_at?: string | null;
           id?: string;
           post_id: string;
           updated_at?: string;
@@ -75,6 +77,7 @@ export type Database = {
           content?: string;
           created_at?: string;
           deleted_at?: string | null;
+          hidden_at?: string | null;
           id?: string;
           post_id?: string;
           updated_at?: string;
@@ -281,6 +284,7 @@ export type Database = {
           content: string;
           created_at: string;
           deleted_at: string | null;
+          hidden_at: string | null;
           id: string;
           service: string;
           title: string;
@@ -291,6 +295,7 @@ export type Database = {
           content: string;
           created_at?: string;
           deleted_at?: string | null;
+          hidden_at?: string | null;
           id?: string;
           service: string;
           title: string;
@@ -301,6 +306,7 @@ export type Database = {
           content?: string;
           created_at?: string;
           deleted_at?: string | null;
+          hidden_at?: string | null;
           id?: string;
           service?: string;
           title?: string;
@@ -321,22 +327,31 @@ export type Database = {
         Row: {
           comment_id: string | null;
           created_at: string;
+          detail: string | null;
           id: string;
           post_id: string | null;
+          reason: string;
+          resolved_at: string | null;
           reporter_user_id: string;
         };
         Insert: {
           comment_id?: string | null;
           created_at?: string;
+          detail?: string | null;
           id?: string;
           post_id?: string | null;
+          reason?: string;
+          resolved_at?: string | null;
           reporter_user_id: string;
         };
         Update: {
           comment_id?: string | null;
           created_at?: string;
+          detail?: string | null;
           id?: string;
           post_id?: string | null;
+          reason?: string;
+          resolved_at?: string | null;
           reporter_user_id?: string;
         };
         Relationships: [
