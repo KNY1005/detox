@@ -18,6 +18,7 @@ interface Props {
   onDelete?: () => void;
   onReport?: () => void;
   className?: string;
+  triggerLabel?: string;
 }
 
 const KebabMenu = ({
@@ -26,12 +27,14 @@ const KebabMenu = ({
   onDelete,
   onReport,
   className,
+  triggerLabel = "옵션 열기",
 }: Props) => {
   return (
     <DropdownMenuPrimitive.Root>
       <DropdownMenuPrimitive.Trigger asChild>
         <button
           type="button"
+          aria-label={triggerLabel}
           className={cn(
             "flex h-11 w-11 cursor-pointer items-center justify-center rounded-full outline-none transition-colors hover:bg-gray-50",
             className
@@ -41,6 +44,7 @@ const KebabMenu = ({
             icon={faEllipsisVertical}
             className="text-gray-400"
             size="sm"
+            aria-hidden="true"
           />
         </button>
       </DropdownMenuPrimitive.Trigger>
@@ -59,6 +63,7 @@ const KebabMenu = ({
               <FontAwesomeIcon
                 icon={faPenToSquare}
                 className="w-4 h-4 mr-3 text-gray-400"
+                aria-hidden="true"
               />
               수정하기
             </DropdownMenuPrimitive.Item>
@@ -72,6 +77,7 @@ const KebabMenu = ({
               <FontAwesomeIcon
                 icon={faTrashCan}
                 className="w-4 h-4 mr-3 text-gray-400"
+                aria-hidden="true"
               />
               삭제하기
             </DropdownMenuPrimitive.Item>
@@ -85,6 +91,7 @@ const KebabMenu = ({
               <FontAwesomeIcon
                 icon={faTriangleExclamation}
                 className="w-4 h-4 mr-3 text-gray-400"
+                aria-hidden="true"
               />
               신고하기
             </DropdownMenuPrimitive.Item>

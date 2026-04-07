@@ -1,6 +1,6 @@
 "use client";
 
-import { startTransition, Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
 import TopFloatingButton from "@/app/components/floating-button/top-floating-button";
 import FeedbackState from "@/app/components/feedback-state";
@@ -146,7 +146,10 @@ export default function CommunityListPageClient({
     <div className="bg-gray-100 pb-15 min-h-screen">
       <Header variant="text" leftText="커뮤니티" hasNotification />
 
-      <main>
+      <main aria-labelledby="community-page-title">
+        <h1 id="community-page-title" className="sr-only">
+          커뮤니티
+        </h1>
         <BrandTabs value={selectedService} onChange={handleChangeService} />
 
         <section className="px-6">

@@ -91,8 +91,13 @@ export default function CommunityDetailCommentSection({
   };
 
   return (
-    <section className="border-t border-gray-50 px-6 py-5">
-      <h3 className="title-md text-gray-400">댓글</h3>
+    <section
+      className="border-t border-gray-50 px-6 py-5"
+      aria-labelledby="community-comments-title"
+    >
+      <h2 id="community-comments-title" className="title-md text-gray-400">
+        댓글
+      </h2>
 
       {isCommentsPending ? (
         <CommunityDetailCommentsSkeleton />
@@ -148,7 +153,7 @@ export default function CommunityDetailCommentSection({
           onClick={handleCreateComment}
           className="disabled:cursor-not-allowed disabled:opacity-50"
         >
-          <FontAwesomeIcon icon={faPaperPlane} />
+          <FontAwesomeIcon icon={faPaperPlane} aria-hidden="true" />
         </TextButton>
       </div>
     </section>

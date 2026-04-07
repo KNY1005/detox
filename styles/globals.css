@@ -15,6 +15,8 @@
 
   --line-gray: #bdbdbd;
 
+  --blue-600: #00747b;
+  --blue-500: #007f87;
   --blue-400: #33999f;
   --blue-300: #54a9af;
   --blue-200: #8ac4c8;
@@ -59,6 +61,8 @@
 
   --color-line-gray: var(--line-gray);
 
+  --color-blue-600: var(--blue-600);
+  --color-blue-500: var(--blue-500);
   --color-blue-400: var(--blue-400);
   --color-blue-300: var(--blue-300);
   --color-blue-200: var(--blue-200);

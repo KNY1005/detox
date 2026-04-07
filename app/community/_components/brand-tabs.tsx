@@ -108,6 +108,7 @@ export default function BrandTabs(props: BrandTabsProps) {
                   onClick={() => props.onChange?.("all")}
                 >
                   <div
+                    aria-hidden="true"
                     className={cn(
                       "flex h-12 w-12 items-center justify-center rounded-xl border cursor-pointer",
                       isActive
@@ -129,7 +130,7 @@ export default function BrandTabs(props: BrandTabsProps) {
                 onClick={() => onChange?.(tab.key as CommunityServiceValue)}
                 labelClassName="max-w-12 text-center whitespace-normal break-keep"
               >
-                <div className="max-w-12">
+                <div className="max-w-12" aria-hidden="true">
                   <BrandBox
                     brandType={tab.key as keyof typeof subscriptableBrand}
                     size="sm"

@@ -15,7 +15,7 @@ export default function AuthorMeta({
 }: AuthorMetaProps) {
   return (
     <div className="flex items-center gap-2">
-      <Avatar size="sm" src={thumbUrl} alt={author} />
+      <Avatar size="sm" src={thumbUrl} alt="" />
       <div className="flex gap-3">
         <div className="text-sm font-bold leading-[110%] text-black">
           {author}

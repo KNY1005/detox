@@ -48,6 +48,7 @@ export default function SnsLoginButton({ onClick, type, loading }: Props) {
             width={48}
             height={48}
             className="absolute left-4"
+            aria-hidden="true"
           />
           <span>{snsLoginType[type].text}</span>
         </div>

@@ -2,21 +2,19 @@ import { cn } from "@/lib/utils";
 
 type TextButtonSize = "sm" | "md" | "lg";
 
-interface Props {
+type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   size?: TextButtonSize;
   children: React.ReactNode;
   underline?: boolean;
-  onClick?: () => void;
-  className?: string;
-  disabled?: boolean;
-}
+};
+
 export default function TextButton({
   size = "md",
   children,
   underline = false,
-  onClick,
   className,
-  disabled = false,
+  type = "button",
+  ...props
 }: Props) {
   return (
     <button
@@ -25,9 +23,8 @@ export default function TextButton({
         underline ? "underline" : "",
         className ?? ""
       )}
-      onClick={onClick}
-      type="button"
-      disabled={disabled}
+      type={type}
+      {...props}
     >
       {children}
     </button>

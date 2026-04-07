@@ -67,6 +67,7 @@ export default function DetailKebab({
     <>
       <KebabMenu
         variant={variant}
+        triggerLabel={`${entityName} 옵션 열기`}
         onEdit={variant === "edit" ? onEdit : undefined}
         onDelete={
           variant === "edit" && onDelete

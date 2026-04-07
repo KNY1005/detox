@@ -50,29 +50,43 @@ export default function CommunityDetailPageClient({
       <Header variant="back" fallbackPath="/community" />
       <main>
         <section className="px-6 py-4">
-          <div className="flex items-center justify-between gap-4">
-            <AuthorMeta
-              thumbUrl={post.thumbUrl}
-              author={post.author}
-              timeAgo={post.timeAgo}
-            />
-            <CommunityDetailPostActions
-              postId={postId}
-              postUserId={post.userId}
-            />
-          </div>
+          <div className="flex flex-col">
+            <article className="order-2 mt-4 text-sm text-gray-300">
+              <h1
+                id="community-post-title"
+                className="mb-2 text-lg font-bold leading-[140%] text-black"
+              >
+                {post.title}
+              </h1>
+              <p
+                id="community-post-content"
+                className="text-base leading-[140%] text-gray-300 whitespace-pre-wrap"
+              >
+                {post.content}
+              </p>
+            </article>
 
-          <div className="mt-4 text-sm text-gray-300">
-            <h6 className="mb-2 text-lg font-bold leading-[140%] text-black">
-              {post.title}
-            </h6>
-            <p className="text-base leading-[140%] text-gray-300 whitespace-pre-wrap">
-              {post.content}
-            </p>
+            <div className="order-1 flex items-center justify-between gap-4">
+              <AuthorMeta
+                thumbUrl={post.thumbUrl}
+                author={post.author}
+                timeAgo={post.timeAgo}
+              />
+              <CommunityDetailPostActions
+                postId={postId}
+                postUserId={post.userId}
+              />
+            </div>
           </div>
         </section>
 
-        <section className="border-t-8 border-gray-50 py-5">
+        <section
+          className="border-t-8 border-gray-50 py-5"
+          aria-labelledby="community-reaction-title"
+        >
+          <h2 id="community-reaction-title" className="sr-only">
+            게시글 반응
+          </h2>
           <CommunityReactionStats
             likeCount={post.likeCount}
             commentCount={comments.length}
@@ -94,11 +108,14 @@ export default function CommunityDetailPageClient({
         {recommendedPostsQuery.isPending ? (
           <CommunityDetailRecommendedPostsSkeleton />
         ) : recommendedPosts.length > 0 ? (
-          <section className="bg-gray-50 px-6 py-6">
-            <h3 className="title-md">
-              <span className="text-brand-primary">AI디톡이</span>가 추천해주는
-              관련 게시글
-            </h3>
+          <section
+            className="bg-gray-50 px-6 py-6"
+            aria-labelledby="recommended-posts-title"
+          >
+            <h2 id="recommended-posts-title" className="title-md">
+              <span className="text-blue-600">AI디톡이</span>가 추천해주는 관련
+              게시글
+            </h2>
 
             <CommunityList items={recommendedPosts} />
           </section>

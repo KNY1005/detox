@@ -29,29 +29,28 @@ export default function CommentList({ items }: CommentListProps) {
   return (
     <ul className="grid grid-cols-1 py-5 gap-5">
       {items.map((item) => (
-        <li
-          key={item.id}
-          className="w-full grid grid-cols-1 items-center gap-1 bg-white rounded-lg"
-        >
-          <div className="flex items-center justify-between min-h-12">
-            <AuthorMeta
-              thumbUrl={item.thumbUrl}
-              author={item.author}
-              timeAgo={item.timeAgo}
-            />
-            {currentUserId ? (
-              <DetailKebab
-                entityName="댓글"
-                variant={currentUserId === item.userId ? "edit" : "default"}
-                onDelete={getDeleteHandler(item)}
-                onReport={getReportHandler(item)}
+        <li key={item.id} className="bg-white rounded-lg">
+          <div className="grid grid-cols-[1fr_auto] items-start gap-2">
+            <article className="grid grid-cols-1 items-center gap-1">
+              <AuthorMeta
+                thumbUrl={item.thumbUrl}
+                author={item.author}
+                timeAgo={item.timeAgo}
               />
+              <p className="break-words text-base leading-[140%] text-gray-300">
+                {item.content}
+              </p>
+            </article>
+            {currentUserId ? (
+              <div className="min-h-12 flex items-start justify-end">
+                <DetailKebab
+                  entityName="댓글"
+                  variant={currentUserId === item.userId ? "edit" : "default"}
+                  onDelete={getDeleteHandler(item)}
+                  onReport={getReportHandler(item)}
+                />
+              </div>
             ) : null}
-          </div>
-          <div className="text-sm text-gray-300">
-            <p className="text-base leading-[140%] text-gray-300 line-clamp-3">
-              {item.content}
-            </p>
           </div>
         </li>
       ))}
