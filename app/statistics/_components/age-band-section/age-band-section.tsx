@@ -4,7 +4,7 @@ import ComparisonInsight from "../comparison-insight";
 import ComparisonChart from "../comparison-chart";
 import CarouselButton from "../carousel-button/carousel-button";
 
-import { useAgeBandComparison, AGE_BANDS } from "@/hooks/useAgeBandComparison";
+import { useDynamicBenchmark } from "@/hooks/useBenchmark";
 
 interface AgeBandSectionProps {
   userName: string;
@@ -18,33 +18,37 @@ export default function AgeBandSection({
   isSubscriptionsLoading,
 }: AgeBandSectionProps) {
   const {
-    ageBandIndex,
-    ageBandLabel,
-    ageAverage,
+    label,
+    averageAmount,
     diffAmount,
     status,
+    isLoading: isBenchmarkLoading,
     handlePrev,
     handleNext,
-  } = useAgeBandComparison(displayAmount);
+    currentIndex,
+    benchmarks,
+  } = useDynamicBenchmark(displayAmount);
+
+  const isLoading = isSubscriptionsLoading || isBenchmarkLoading;
 
   return (
     <div className="mt-4">
       <ComparisonInsight
-        isLoading={isSubscriptionsLoading}
-        title={`${ageBandLabel} 소비 비교`}
+        isLoading={isLoading}
+        title={`${label} 소비 비교`}
         diffAmount={diffAmount}
         status={status}
       />
 
       <div className="relative">
-        {ageBandIndex > 0 && (
+        {currentIndex > 0 && (
           <CarouselButton
             direction="left"
             onClick={handlePrev}
             label="이전 연령대 비교 보기"
           />
         )}
-        {ageBandIndex < AGE_BANDS.length - 1 && (
+        {currentIndex < benchmarks.length - 1 && (
           <CarouselButton
             direction="right"
             onClick={handleNext}
@@ -55,9 +59,9 @@ export default function AgeBandSection({
         <ComparisonChart
           userName={`${userName}님`}
           userAmount={displayAmount}
-          compareName={ageBandLabel}
-          compareAmount={ageAverage}
-          isLoading={isSubscriptionsLoading}
+          compareName={label}
+          compareAmount={averageAmount}
+          isLoading={isLoading}
         />
       </div>
     </div>
