@@ -120,7 +120,8 @@ export async function POST(req: Request) {
           } else {
             results.push({ question: q, cacheKey, status: "skip-no-json" });
           }
-        } catch {
+        } catch (err) {
+          console.error("[analyze prefetch] question failed:", q, err);
           results.push({ question: q, cacheKey, status: "error" });
         }
       }

@@ -26,10 +26,12 @@ export async function getCachedAnalysis(
   cacheKey: string
 ): Promise<string | null> {
   const local = inMemoryCache.get(cacheKey);
-  if (local && Date.now() - local.updatedAt < CACHE_TTL_MS) {
-    return local.responseText;
+  if (!local) return null;
+  if (Date.now() - local.updatedAt >= CACHE_TTL_MS) {
+    inMemoryCache.delete(cacheKey);
+    return null;
   }
-  return null;
+  return local.responseText;
 }
 
 export async function upsertAnalysisCache(
