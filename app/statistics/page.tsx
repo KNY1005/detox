@@ -12,7 +12,6 @@ import EmptyAnalysis from "./_components/empty-analysis";
 import EmptySubscriptionOverlay from "./_components/empty-subscription-overlay";
 import AnalysisSummary from "./_components/analysis-summary/analysis-summary";
 import ErrorScreen from "@/app/components/error-screen/error-screen";
-import { useAIStreaming } from "@/hooks/useAIStreaming";
 
 import { calculateMonthlyTotal } from "@/app/utils/subscriptions/calculate";
 import { useCurrentUserQuery, useUserProfileQuery } from "@/query/users";
