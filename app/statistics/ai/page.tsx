@@ -13,6 +13,9 @@ export default function AIChat() {
   const {
     aiStatus,
     messages,
+    streamedResult,
+    cacheStatus,
+    lastLatency,
     showQuickQuestions,
     scrollRef,
     handleQuestionSelect,
@@ -32,11 +35,19 @@ export default function AIChat() {
     <main className="relative flex flex-col w-full h-screen bg-white">
       <Header variant="back" title="AI디톡이와 소비분석" />
 
+      <div className="flex justify-between items-center px-6 mb-2 text-xs text-gray-500">
+        <span>캐시 상태: {cacheStatus ?? "-"}</span>
+        <span>
+          응답 지연: {lastLatency !== null ? `${lastLatency}ms` : "-"}
+        </span>
+      </div>
+
       <div
         ref={scrollRef}
         className="flex-1 overflow-y-auto pt-4 pb-10 custom-scrollbar"
       >
         <DateDivider />
+
         <AIBubble
           status="text"
           content={`안녕하세요\n저는 ${username}님의\n소비분석을 도와드리는 AI디톡이에요.\n아래 질문 중 하나를 선택해주시면\n제가 알잘딱깔센하게 분석해드릴게요.`}
@@ -56,7 +67,9 @@ export default function AIChat() {
           )
         )}
 
-        {aiStatus === "analyzing" && <AIBubble status="analyzing" />}
+        {aiStatus === "analyzing" && (
+          <AIBubble status="analyzing" content={streamedResult} />
+        )}
 
         {showQuickQuestions && aiStatus !== "analyzing" && (
           <QuickQuestions onSelect={handleQuestionSelect} />

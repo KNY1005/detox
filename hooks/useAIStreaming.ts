@@ -28,13 +28,16 @@ export function useAIStreaming() {
       if (!response.body) return;
 
       const reader = response.body.getReader();
+
       const decoder = new TextDecoder();
       let done = false;
 
       while (!done) {
         const { value, done: doneReading } = await reader.read();
         done = doneReading;
+
         const chunkValue = decoder.decode(value);
+
         setStreamedResult((prev) => prev + chunkValue);
       }
     } catch (error) {

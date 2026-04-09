@@ -9,7 +9,9 @@ export default function UserBubble({ content, time }: UserBubbleProps) {
   return (
     <div className="flex flex-col items-end mb-6 px-6 animate-in slide-in-from-right-2">
       <div className="bg-brand-primary text-white px-3 py-3 text-right rounded-lg rounded-tr-none max-w-[90%] break-keep wrap-anywhere">
-        <p className="body-lg leading-relaxed">{content}</p>
+        <p className="body-lg leading-relaxed text-white font-medium">
+          {content}
+        </p>
       </div>
       <span className="label-lg  text-gray-300 mt-1">{time}</span>
     </div>
