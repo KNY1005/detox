@@ -14,30 +14,62 @@ import { QUICK_ANALYSIS_QUESTIONS } from "@/app/utils/ai/quick-analysis-question
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
+/** 프리패치 시 한 요청당 허용하는 최대 질문 수 (비용·지연 상한) */
+const MAX_PREFETCH_QUESTIONS = 20;
+
 if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
   throw new Error("필수 환경 변수가 설정되지 않았습니다.");
 }
 
 type AnalyzeBody = {
-  userContext?: { categoryRatio?: Record<string, number> };
   question?: string;
 };
 
 type PrefetchBody = {
   mode: "prefetch";
   userId: string;
-  questions?: string[];
+  questions?: unknown;
 };
 
-function isPrefetchBody(
-  body: unknown
-): body is PrefetchBody {
+function isPrefetchBody(body: unknown): body is PrefetchBody {
   return (
     typeof body === "object" &&
     body !== null &&
     (body as PrefetchBody).mode === "prefetch" &&
     typeof (body as PrefetchBody).userId === "string"
   );
+}
+
+/** questions 미지정 시 빠른 질문 목록, 지정 시 문자열 배열만 허용·상한 적용 */
+function resolvePrefetchQuestionList(
+  questions: unknown
+): { ok: true; list: string[] } | { ok: false; response: Response } {
+  if (questions === undefined) {
+    return { ok: true, list: [...QUICK_ANALYSIS_QUESTIONS] };
+  }
+  if (!Array.isArray(questions)) {
+    return {
+      ok: false,
+      response: Response.json(
+        { error: "questions는 문자열 배열이어야 합니다." },
+        { status: 400 }
+      ),
+    };
+  }
+  if (questions.some((q) => typeof q !== "string")) {
+    return {
+      ok: false,
+      response: Response.json(
+        { error: "questions의 각 항목은 문자열이어야 합니다." },
+        { status: 400 }
+      ),
+    };
+  }
+  const trimmed = (questions as string[])
+    .map((q) => q.trim())
+    .filter(Boolean)
+    .slice(0, MAX_PREFETCH_QUESTIONS);
+  return { ok: true, list: trimmed };
 }
 
 export async function POST(req: Request) {
@@ -52,18 +84,22 @@ export async function POST(req: Request) {
     });
 
     const {
-      data: { session },
-    } = await supabase.auth.getSession();
-    if (!session) {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+    if (authError || !user) {
       return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const body: unknown = await req.json();
 
     if (isPrefetchBody(body)) {
-      if (body.userId !== session.user.id) {
+      if (body.userId !== user.id) {
         return Response.json({ error: "Forbidden" }, { status: 403 });
       }
+
+      const resolved = resolvePrefetchQuestionList(body.questions);
+      if (!resolved.ok) return resolved.response;
 
       const { data: subs, error: subsError } = await supabase
         .from("subscription")
@@ -80,7 +116,7 @@ export async function POST(req: Request) {
       }
 
       const categoryRatio = calculateCategoryRatio(subs);
-      const list = (body.questions ?? [...QUICK_ANALYSIS_QUESTIONS]) as string[];
+      const list = resolved.list;
 
       const results: Array<{
         question: string;
@@ -129,23 +165,21 @@ export async function POST(req: Request) {
       return Response.json({ status: "ok", results });
     }
 
-    const { userContext, question } = body as AnalyzeBody;
+    const { question } = body as AnalyzeBody;
     const questionText = typeof question === "string" ? question.trim() : "";
 
     const { data: subscriptions, error: dbError } = await supabase
       .from("subscription")
       .select("*")
-      .eq("user_id", session.user.id);
+      .eq("user_id", user.id);
 
-    if (dbError || !subscriptions?.length || !userContext?.categoryRatio) {
+    if (dbError || !subscriptions?.length) {
       return Response.json({ error: "데이터 부족" }, { status: 400 });
     }
 
-    const cacheKey = makeCacheKey(
-      session.user.id,
-      questionText,
-      userContext.categoryRatio as Record<string, number>
-    );
+    const categoryRatio = calculateCategoryRatio(subscriptions);
+
+    const cacheKey = makeCacheKey(user.id, questionText, categoryRatio);
     const cached = await getCachedAnalysis(cacheKey);
     if (cached) {
       return new Response(cached, {
@@ -165,7 +199,7 @@ export async function POST(req: Request) {
           const accumulated = await streamSubscriptionAnalysis(
             {
               subscriptions: subscriptions as Record<string, unknown>[],
-              categoryRatio: userContext.categoryRatio as Record<string, number>,
+              categoryRatio,
               questionText,
             },
             (chunk) => {
@@ -188,10 +222,12 @@ export async function POST(req: Request) {
           } catch (e) {
             console.error("Final JSON parse/validate error:", e);
           }
+          controller.close();
         } catch (e) {
           console.error("Analysis stream error:", e);
-        } finally {
-          controller.close();
+          controller.error(
+            e instanceof Error ? e : new Error(String(e))
+          );
         }
       },
     });

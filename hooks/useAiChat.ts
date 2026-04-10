@@ -2,10 +2,8 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useCurrentUserQuery } from "@/query/users";
-import { supabase } from "@/lib/supabase";
 import { useAnalysisStore } from "@/store/useAnalysisStore";
 import { AnalysisResponse } from "@/app/utils/subscriptions/validation";
-import { calculateCategoryRatio } from "@/app/utils/ai/analysis";
 import { extractJsonChunk } from "@/app/utils/ai/stream-parser";
 
 export interface Message {
@@ -18,7 +16,6 @@ export interface Message {
 
 export interface AIAnalyzeStreamPayload {
   question: string;
-  userContext: { categoryRatio: Record<string, number> };
 }
 
 export function useAiChat() {
@@ -91,19 +88,7 @@ export function useAiChat() {
     try {
       if (!user?.id) throw new Error("로그인이 필요합니다.");
 
-      const { data: subscriptions, error: subError } = await supabase
-        .from("subscription")
-        .select("service, total_amount")
-        .eq("user_id", user.id);
-
-      if (subError) throw subError;
-
-      const categoryRatio = calculateCategoryRatio(subscriptions || []);
-
-      const accumulatedText = await streamAnalyze({
-        question,
-        userContext: { categoryRatio },
-      });
+      const accumulatedText = await streamAnalyze({ question });
 
       const responseTime = new Date().toLocaleTimeString("ko-KR", {
         hour: "2-digit",
